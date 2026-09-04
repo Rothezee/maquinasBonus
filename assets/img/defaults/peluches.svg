@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Máquina de peluches">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a1033"/>
+      <stop offset="100%" stop-color="#0d1b3a"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7ee8ff" stop-opacity=".35"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity=".12"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <rect x="88" y="38" width="224" height="230" rx="18" fill="#15101f" stroke="#f5c518" stroke-width="4"/>
+  <rect x="108" y="58" width="184" height="128" rx="10" fill="url(#glass)" stroke="#00e5ff" stroke-width="2"/>
+  <circle cx="148" cy="128" r="18" fill="#ff6b9d"/>
+  <circle cx="188" cy="142" r="16" fill="#f5c518"/>
+  <circle cx="228" cy="124" r="20" fill="#7c5cff"/>
+  <circle cx="258" cy="148" r="14" fill="#00e5ff"/>
+  <rect x="196" y="58" width="8" height="42" fill="#e8e8ef"/>
+  <path d="M186 100 h28 l-6 18 h-16 z" fill="#c9ccd8"/>
+  <rect x="128" y="198" width="144" height="48" rx="8" fill="#22182f"/>
+  <circle cx="200" cy="222" r="14" fill="#ff2d95" stroke="#f5c518" stroke-width="2"/>
+  <rect x="112" y="258" width="176" height="10" rx="4" fill="#f5c518"/>
+</svg>

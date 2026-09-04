@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Kiddie">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2a1230"/>
+      <stop offset="100%" stop-color="#0b1224"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <ellipse cx="200" cy="230" rx="110" ry="22" fill="#1a1428"/>
+  <rect x="120" y="168" width="160" height="58" rx="18" fill="#ff2d95"/>
+  <rect x="148" y="128" width="104" height="52" rx="16" fill="#f5c518"/>
+  <circle cx="168" cy="228" r="22" fill="#22182f" stroke="#00e5ff" stroke-width="4"/>
+  <circle cx="232" cy="228" r="22" fill="#22182f" stroke="#00e5ff" stroke-width="4"/>
+  <circle cx="200" cy="108" r="28" fill="#ffb4d6"/>
+  <rect x="186" y="78" width="28" height="16" rx="6" fill="#7c5cff"/>
+  <circle cx="190" cy="104" r="4" fill="#22182f"/>
+  <circle cx="210" cy="104" r="4" fill="#22182f"/>
+</svg>
