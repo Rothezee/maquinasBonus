@@ -266,19 +266,36 @@ function franchise_whatsapp(): string
     return 'https://wa.me/' . WHATSAPP . '?text=' . rawurlencode($text);
 }
 
+function comodato_whatsapp(): string
+{
+    $text = 'Hola, quiero info del comodato a porcentaje para poner una máquina de ' . SITE_NAME . ' en mi local.';
+    return 'https://wa.me/' . WHATSAPP . '?text=' . rawurlencode($text);
+}
+
 function stats(array $machines): array
 {
     $rented = 0;
+    $sold = 0;
+    $available = 0;
     foreach ($machines as $machine) {
-        if (!empty($machine['rented'])) {
+        $isRented = !empty($machine['rented']);
+        $isSold = !empty($machine['sold']);
+        if ($isRented) {
             $rented++;
+        }
+        if ($isSold) {
+            $sold++;
+        }
+        if (!$isRented && !$isSold) {
+            $available++;
         }
     }
     $total = count($machines);
     return [
         'total' => $total,
         'rented' => $rented,
-        'available' => $total - $rented,
+        'sold' => $sold,
+        'available' => $available,
         'categories' => count(CATEGORIES),
     ];
 }
@@ -374,6 +391,7 @@ function sanitize_machine_input(array $input): array
     $category = (string) ($input['category'] ?? '');
     $description = trim((string) ($input['description'] ?? ''));
     $rented = !empty($input['rented']);
+    $sold = !empty($input['sold']);
     $videos = sanitize_video_urls($input['videos'] ?? ($input['video_urls'] ?? ''));
 
     if ($name === '') {
@@ -391,6 +409,7 @@ function sanitize_machine_input(array $input): array
         'category' => $category,
         'description' => clip($description, 600),
         'rented' => $rented,
+        'sold' => $sold,
         'videos' => $videos,
     ];
 }

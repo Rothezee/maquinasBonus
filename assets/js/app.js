@@ -1,4 +1,28 @@
 (function () {
+    const nav = document.getElementById('site-nav');
+    const navToggle = document.getElementById('nav-toggle');
+
+    function setNavOpen(open) {
+        if (!nav || !navToggle) return;
+        nav.classList.toggle('is-open', open);
+        navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        navToggle.textContent = open ? 'Cerrar' : 'Menú';
+        document.body.classList.toggle('nav-open', open);
+    }
+
+    if (navToggle && nav) {
+        navToggle.addEventListener('click', function () {
+            setNavOpen(!nav.classList.contains('is-open'));
+        });
+        nav.addEventListener('click', function (event) {
+            const link = event.target.closest('a');
+            if (link) setNavOpen(false);
+        });
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') setNavOpen(false);
+        });
+    }
+
     const grid = document.getElementById('machine-grid');
     const empty = document.getElementById('empty-state');
     const search = document.getElementById('search');
@@ -118,12 +142,21 @@
         if (viewerCategory) viewerCategory.textContent = data.category || '';
         if (viewerDescription) viewerDescription.textContent = data.description || '';
         if (viewerStatus) {
-            viewerStatus.textContent = data.rented ? 'Alquilada' : 'Disponible';
-            viewerStatus.className = 'viewer-status' + (data.rented ? ' is-rented' : ' is-available');
+            if (data.rented) {
+                viewerStatus.textContent = 'Alquilada';
+                viewerStatus.className = 'viewer-status is-rented';
+            } else if (data.sold) {
+                viewerStatus.textContent = 'Vendida';
+                viewerStatus.className = 'viewer-status is-sold';
+            } else {
+                viewerStatus.textContent = 'Disponible';
+                viewerStatus.className = 'viewer-status is-available';
+            }
         }
         if (viewerWhatsapp) {
             viewerWhatsapp.href = data.whatsapp || '#';
-            viewerWhatsapp.hidden = !!data.rented;
+            viewerWhatsapp.hidden = !!(data.rented || data.sold);
+            viewerWhatsapp.textContent = 'Consultar por WhatsApp';
         }
         if (viewerVideos) {
             viewerVideos.innerHTML = '';
@@ -190,6 +223,12 @@
     if (viewer) {
         viewer.addEventListener('click', function (event) {
             if (event.target === viewer) closeMachine();
+        });
+    }
+    const dealLink = document.getElementById('viewer-deal-link');
+    if (dealLink) {
+        dealLink.addEventListener('click', function () {
+            closeMachine();
         });
     }
     if (viewerPrev) {

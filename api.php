@@ -84,12 +84,15 @@ try {
         ]);
     }
 
-    if ($action === 'toggle') {
+    if ($action === 'toggle' || $action === 'toggle_sold') {
         $id = (string) ($_POST['id'] ?? '');
+        $field = $action === 'toggle_sold' ? 'sold' : 'rented';
         $found = false;
         foreach ($machines as &$machine) {
             if (($machine['id'] ?? '') === $id) {
-                $machine['rented'] = empty($machine['rented']);
+                $machine[$field] = empty($machine[$field]);
+                // Compat: limpia el flag viejo si existía
+                unset($machine['for_sale']);
                 $found = true;
                 $saved = $machine;
                 break;

@@ -1,99 +1,10 @@
 [
     {
-        "id": "m01peluche",
-        "name": "Grúa de peluches Jumbo",
-        "category": "peluches",
-        "description": "Claw machine de gran tamaño, ideal para locales con alto tránsito. Iluminación LED, brazo preciso y capacidad para peluches medianos y grandes.",
-        "photo": "",
-        "rented": false,
-        "created_at": "2026-03-12 10:00:00"
-    },
-    {
-        "id": "m02peluche",
-        "name": "Mini grúa de peluches",
-        "category": "peluches",
-        "description": "Versión compacta para kioscos, salas chicas o eventos. Fácil de instalar, bajo consumo y gran impacto visual.",
-        "photo": "",
-        "rented": true,
-        "created_at": "2026-03-18 11:20:00"
-    },
-    {
-        "id": "m03tejos",
-        "name": "Mesa de tejos profesional",
-        "category": "tejos",
-        "description": "Air hockey de medida profesional, soplado potente y marcador digital. Perfecta para salones de juegos y eventos familiares.",
-        "photo": "",
-        "rented": false,
-        "created_at": "2026-04-02 09:15:00"
-    },
-    {
-        "id": "m04pool",
-        "name": "Pool americano 8 pies",
-        "category": "pooles",
-        "description": "Mesa de pool sólida, paño en excelente estado y juego de bolas completo. Lista para instalar en bares, clubs o locales de juegos.",
-        "photo": "",
-        "rented": false,
-        "created_at": "2026-04-10 16:40:00"
-    },
-    {
-        "id": "m05kiddie",
-        "name": "Kiddie caballito",
-        "category": "kiddies",
-        "description": "Juego infantil con movimiento suave, luces y melodías. Pensado para los más chicos, con base estable y operación simple.",
-        "photo": "",
-        "rented": true,
-        "created_at": "2026-05-01 12:00:00"
-    },
-    {
-        "id": "m06kiddie",
-        "name": "Kiddie auto",
-        "category": "kiddies",
-        "description": "Motocicleta \/ auto kiddie con tablero luminoso. Ocupa poco espacio y funciona muy bien en la entrada del local.",
-        "photo": "",
-        "rented": false,
-        "created_at": "2026-05-08 14:30:00"
-    },
-    {
-        "id": "m07carrera",
-        "name": "Simulador de carreras 2 jugadores",
-        "category": "carreras",
-        "description": "Gabinete de driving para dos jugadores, volantes con force feedback, butacas y pantalla panorámica. La atracción estrella del salón.",
-        "photo": "",
-        "rented": false,
-        "created_at": "2026-05-20 18:00:00"
-    },
-    {
-        "id": "m08video",
-        "name": "Arcade clásico multi-juego",
-        "category": "videojuegos",
-        "description": "Gabinete arcade con cientos de títulos retro. Palancas y botones recreados, listo para torneos casuales o ambientación vintage.",
-        "photo": "",
-        "rented": false,
-        "created_at": "2026-06-04 10:10:00"
-    },
-    {
-        "id": "m09video",
-        "name": "Gabinete peleas 2P",
-        "category": "videojuegos",
-        "description": "Máquina de lucha para dos jugadores. Ideal para atraer público joven y armar competencias en el local.",
-        "photo": "",
-        "rented": true,
-        "created_at": "2026-06-15 13:45:00"
-    },
-    {
-        "id": "m10clips",
-        "name": "Máquina de clips",
-        "category": "clips",
-        "description": "Claw de clips y premios chicos, muy rendidora. Iluminación atractiva y mecánica confiable para operación diaria.",
-        "photo": "",
-        "rented": false,
-        "created_at": "2026-07-01 09:00:00"
-    },
-    {
         "name": "Toy kingdom",
         "category": "peluches",
         "description": "Maquina de peluches 60x60 perfecta para locales pequeños y que busquen facil movilidad",
         "rented": false,
+        "sold": false,
         "videos": [],
         "id": "99453fa4a94b5eda",
         "photos": [
@@ -105,5 +16,21 @@
         ],
         "photo": "uploads\/maq_932cadc844589501.jpg",
         "created_at": "2026-09-03 16:11:02"
+    },
+    {
+        "name": "Maquina de peluches Bonus",
+        "category": "peluches",
+        "description": "La maquina juega a 2 fichas para peluches medianos 75x75.",
+        "rented": false,
+        "sold": false,
+        "videos": [],
+        "id": "6cf3417a51ad7d1b",
+        "photos": [
+            "uploads\/maq_4b9035429dcceb13.jpg",
+            "uploads\/maq_ecffe8d821a6be1f.jpg",
+            "uploads\/maq_5a5c0a7764825e7b.jpg"
+        ],
+        "photo": "uploads\/maq_4b9035429dcceb13.jpg",
+        "created_at": "2026-09-06 22:11:54"
     }
 ]

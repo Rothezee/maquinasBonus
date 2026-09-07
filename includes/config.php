@@ -17,6 +17,7 @@ define('LOGO_URL', 'img/logo-bonus.png');
 define('LOGO_CIRCLE_URL', 'assets/img/logo-circle.png');
 define('FAVICON_URL', 'assets/img/favicon.png?v=2');
 define('SITE_CITY', 'Buenos Aires');
+define('SITE_URL', 'https://maquinasbonus.com');
 define('WHATSAPP', '2664317619');
 define('INSTAGRAM', 'bonus.playpark');
 define('FACEBOOK', 'Bonussanluis');
@@ -33,7 +34,7 @@ const CATEGORIES = [
     'peluches' => [
         'label' => 'Peluches',
         'full' => 'Máquinas de peluches',
-        'hint' => 'Grúas y claw machines',
+        'hint' => 'Grúas, claw machines y peluches',
     ],
     'tejos' => [
         'label' => 'Tejos',
@@ -53,12 +54,12 @@ const CATEGORIES = [
     'carreras' => [
         'label' => 'Carreras',
         'full' => 'Máquinas de carreras',
-        'hint' => 'Simuladores y driving',
+        'hint' => 'Arcade de carrera y simuladores',
     ],
     'videojuegos' => [
         'label' => 'Videojuegos',
-        'full' => 'Videojuegos',
-        'hint' => 'Arcade y gabinetes',
+        'full' => 'Videojuegos arcade',
+        'hint' => 'Arcade de pelea, gabinetes y box',
     ],
     'clips' => [
         'label' => 'Clips',

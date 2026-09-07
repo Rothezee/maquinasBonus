@@ -18,7 +18,7 @@ $stats = stats($machines);
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=5">
 </head>
 <body class="admin-body">
     <div class="noise" aria-hidden="true"></div>
@@ -35,7 +35,7 @@ $stats = stats($machines);
             <div>
                 <p class="eyebrow">Gestión</p>
                 <h1>Máquinas del local</h1>
-                <p>Cargá varias fotos, links de video y marcá las que están alquiladas. El cartel se ve al instante en la web.</p>
+                <p>Cargá varias fotos, links de video y marcá las que están alquiladas o vendidas. El cartel se ve al instante en la web.</p>
             </div>
             <button class="btn btn-gold" type="button" id="open-create">+ Agregar máquina</button>
         </section>
@@ -43,7 +43,7 @@ $stats = stats($machines);
         <section class="hero-stats admin-stats">
             <div><em id="stat-available"><?php echo (int) $stats['available']; ?></em><span>disponibles</span></div>
             <div><em id="stat-rented"><?php echo (int) $stats['rented']; ?></em><span>alquiladas</span></div>
-            <div><em id="stat-categories"><?php echo (int) $stats['categories']; ?></em><span>categorías</span></div>
+            <div><em id="stat-sold"><?php echo (int) $stats['sold']; ?></em><span>vendidas</span></div>
             <div><em id="stat-total"><?php echo (int) $stats['total']; ?></em><span>en el catálogo</span></div>
         </section>
 
@@ -51,15 +51,25 @@ $stats = stats($machines);
             <?php foreach ($machines as $machine): ?>
                 <?php
                 $rented = !empty($machine['rented']);
+                $sold = !empty($machine['sold']);
                 $photos = machine_photos($machine);
                 $videos = machine_videos($machine);
                 $stored = stored_machine_photos($machine);
+                $cardClass = 'admin-card';
+                if ($rented) {
+                    $cardClass .= ' is-rented';
+                }
+                if ($sold) {
+                    $cardClass .= ' is-sold';
+                }
                 ?>
-                <article class="admin-card<?php echo $rented ? ' is-rented' : ''; ?>" data-id="<?php echo e($machine['id']); ?>">
+                <article class="<?php echo $cardClass; ?>" data-id="<?php echo e($machine['id']); ?>">
                     <div class="photo">
                         <img src="<?php echo e($photos[0]); ?>" alt="">
                         <?php if ($rented): ?>
                             <div class="rented-banner"><span>Alquilada</span></div>
+                        <?php elseif ($sold): ?>
+                            <div class="sold-banner"><span>Vendida</span></div>
                         <?php endif; ?>
                     </div>
                     <div class="admin-card-body">
@@ -69,10 +79,14 @@ $stats = stats($machines);
                         <p class="admin-meta">
                             <?php echo count($stored); ?> foto<?php echo count($stored) === 1 ? '' : 's'; ?>
                             · <?php echo count($videos); ?> video<?php echo count($videos) === 1 ? '' : 's'; ?>
+                            <?php if ($sold): ?> · Vendida<?php endif; ?>
                         </p>
                         <div class="admin-actions">
                             <button type="button" class="btn btn-tiny js-toggle" data-id="<?php echo e($machine['id']); ?>">
                                 <?php echo $rented ? 'Marcar disponible' : 'Marcar alquilada'; ?>
+                            </button>
+                            <button type="button" class="btn btn-tiny btn-ghost js-toggle-sold" data-id="<?php echo e($machine['id']); ?>">
+                                <?php echo $sold ? 'Desmarcar vendida' : 'Marcar vendida'; ?>
                             </button>
                             <button
                                 type="button"
@@ -82,6 +96,7 @@ $stats = stats($machines);
                                 data-category="<?php echo e($machine['category'] ?? ''); ?>"
                                 data-description="<?php echo e($machine['description'] ?? ''); ?>"
                                 data-rented="<?php echo $rented ? '1' : '0'; ?>"
+                                data-sold="<?php echo $sold ? '1' : '0'; ?>"
                                 data-photos="<?php echo e(json_encode($stored, JSON_UNESCAPED_SLASHES)); ?>"
                                 data-videos="<?php echo e(json_encode($videos, JSON_UNESCAPED_SLASHES)); ?>"
                             >Editar</button>
@@ -143,12 +158,17 @@ $stats = stats($machines);
                     Ya está alquilada (mostrar cartel)
                 </label>
 
+                <label class="check">
+                    <input type="checkbox" name="sold" id="form-sold" value="1">
+                    Ya está vendida (mostrar cartel)
+                </label>
+
                 <p class="flash error" id="form-error" hidden></p>
                 <button class="btn btn-gold" type="submit" id="form-submit">Guardar máquina</button>
             </form>
         </div>
     </div>
 
-    <script src="assets/js/admin.js"></script>
+    <script src="assets/js/admin.js?v=5"></script>
 </body>
 </html>

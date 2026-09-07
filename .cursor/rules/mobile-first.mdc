@@ -1,0 +1,28 @@
+---
+description: Priorizar UX y diseño mobile-first en maquinasBonus
+alwaysApply: true
+---
+
+# Mobile-first (prioridad absoluta)
+
+La mayoría de los visitantes entra desde el celular. **Todo cambio de UI se diseña y verifica primero en viewport ~360–430px**, y después se escala a desktop.
+
+## Obligatorio
+
+- Touch targets ≥ 44×44px (botones, dots, prev/next, cerrar modal).
+- En móvil: navegación usable para personas mayores — botón **Menú** con texto claro (no solo ícono), links grandes (≥48–54px), WhatsApp siempre visible en el header.
+- Sin scroll horizontal: grids con `minmax(min(100%, …), 1fr)` o 1 columna en móvil.
+- Padding lateral cómodo (`~4vw` / 16px), respetar `safe-area-inset-*`.
+- Tipografía y hero que no empujen el layout (`clamp` conservador en móvil).
+- Modales casi a pantalla completa en móvil; fotos del viewer con `object-fit: contain` para ver la máquina completa.
+- Probar catálogo, filtros, carrusel y “Ver más” / WhatsApp con el pulgar.
+
+## Evitar
+
+- Anchos fijos > viewport (p. ej. `minmax(270px, 1fr)` sin media query).
+- Texto o botones apretados que obliguen zoom.
+- Diseñar solo en desktop y “arreglar móvil después”.
+
+## Al tocar CSS/JS/PHP de la vista pública
+
+Revisar `assets/css/style.css`, `assets/js/app.js` e `index.php` pensando móvil primero. Si hay duda entre estética desktop y usabilidad móvil, gana el móvil.

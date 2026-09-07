@@ -10,6 +10,7 @@
     const categoryInput = document.getElementById('form-category');
     const descriptionInput = document.getElementById('form-description');
     const rentedInput = document.getElementById('form-rented');
+    const soldInput = document.getElementById('form-sold');
     const photosInput = document.getElementById('form-photos');
     const videosInput = document.getElementById('form-videos');
     const keepInput = document.getElementById('form-keep-photos');
@@ -86,6 +87,7 @@
             categoryInput.value = data.category;
             descriptionInput.value = data.description;
             rentedInput.checked = data.rented === '1';
+            soldInput.checked = data.sold === '1';
             try {
                 keepPhotos = JSON.parse(data.photos || '[]') || [];
             } catch (e) {
@@ -137,6 +139,7 @@
         const edit = event.target.closest('.js-edit');
         const del = event.target.closest('.js-delete');
         const toggle = event.target.closest('.js-toggle');
+        const toggleSale = event.target.closest('.js-toggle-sold');
 
         if (edit) {
             openModal('edit', edit.dataset);
@@ -155,6 +158,13 @@
                 location.reload();
             });
         }
+
+        if (toggleSale) {
+            send({ action: 'toggle_sold', id: toggleSale.dataset.id }).then(function (res) {
+                if (!res.ok) return alert(res.error || 'No se pudo actualizar');
+                location.reload();
+            });
+        }
     });
 
     form.addEventListener('submit', function (event) {
@@ -164,6 +174,7 @@
         syncKeepInput();
         const data = new FormData(form);
         if (!rentedInput.checked) data.delete('rented');
+        if (!soldInput.checked) data.delete('sold');
 
         fetch('api.php', { method: 'POST', body: data })
             .then(function (r) { return r.json(); })
