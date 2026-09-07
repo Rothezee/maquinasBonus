@@ -99,13 +99,141 @@ function default_photo(string $category): string
     return 'assets/img/defaults/peluches.svg';
 }
 
+function photo_exists(string $photo): bool
+{
+    if ($photo === '') {
+        return false;
+    }
+    $path = ROOT_PATH . DIRECTORY_SEPARATOR . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $photo);
+    return is_file($path);
+}
+
+function stored_machine_photos(array $machine): array
+{
+    $raw = [];
+    if (!empty($machine['photos']) && is_array($machine['photos'])) {
+        foreach ($machine['photos'] as $photo) {
+            $photo = str_replace('\\', '/', trim((string) $photo));
+            if ($photo !== '') {
+                $raw[] = $photo;
+            }
+        }
+    } elseif (!empty($machine['photo'])) {
+        $raw[] = str_replace('\\', '/', (string) $machine['photo']);
+    }
+
+    $photos = [];
+    foreach ($raw as $photo) {
+        if (strpos($photo, 'uploads/') === 0 && photo_exists($photo)) {
+            $photos[] = $photo;
+        }
+    }
+
+    return array_values(array_unique($photos));
+}
+
+function machine_photos(array $machine): array
+{
+    $photos = stored_machine_photos($machine);
+    if (!$photos) {
+        return [default_photo($machine['category'] ?? 'peluches')];
+    }
+    return $photos;
+}
+
 function machine_photo(array $machine): string
 {
-    $photo = $machine['photo'] ?? '';
-    if ($photo !== '' && is_file(ROOT_PATH . DIRECTORY_SEPARATOR . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $photo))) {
-        return str_replace('\\', '/', $photo);
+    return machine_photos($machine)[0];
+}
+
+function machine_videos(array $machine): array
+{
+    if (empty($machine['videos']) || !is_array($machine['videos'])) {
+        return [];
     }
-    return default_photo($machine['category'] ?? 'peluches');
+    $out = [];
+    foreach ($machine['videos'] as $video) {
+        $video = trim((string) $video);
+        if ($video !== '') {
+            $out[] = $video;
+        }
+    }
+    return array_values(array_unique($out));
+}
+
+function sanitize_video_urls($raw): array
+{
+    if (is_string($raw)) {
+        $raw = preg_split('/[\r\n,]+/', $raw) ?: [];
+    }
+    if (!is_array($raw)) {
+        return [];
+    }
+
+    $videos = [];
+    foreach ($raw as $item) {
+        $url = trim((string) $item);
+        if ($url === '') {
+            continue;
+        }
+        if (!filter_var($url, FILTER_VALIDATE_URL)) {
+            throw new InvalidArgumentException('Revisá que los links de video sean URLs válidas.');
+        }
+        $scheme = strtolower((string) parse_url($url, PHP_URL_SCHEME));
+        if (!in_array($scheme, ['http', 'https'], true)) {
+            throw new InvalidArgumentException('Los videos tienen que empezar con http:// o https://.');
+        }
+        $videos[] = clip($url, 400);
+        if (count($videos) >= MAX_VIDEOS) {
+            break;
+        }
+    }
+    return array_values(array_unique($videos));
+}
+
+function video_embed(string $url): array
+{
+    $host = strtolower((string) parse_url($url, PHP_URL_HOST));
+    $path = (string) parse_url($url, PHP_URL_PATH);
+    $query = [];
+    parse_str((string) parse_url($url, PHP_URL_QUERY), $query);
+
+    if (strpos($host, 'youtu.be') !== false) {
+        $id = trim($path, '/');
+        if ($id !== '') {
+            return ['type' => 'youtube', 'embed' => 'https://www.youtube.com/embed/' . rawurlencode($id), 'url' => $url];
+        }
+    }
+
+    if (strpos($host, 'youtube.com') !== false || strpos($host, 'youtube-nocookie.com') !== false) {
+        if (!empty($query['v'])) {
+            return ['type' => 'youtube', 'embed' => 'https://www.youtube.com/embed/' . rawurlencode($query['v']), 'url' => $url];
+        }
+        if (preg_match('#/(embed|shorts)/([^/?]+)#', $path, $m)) {
+            return ['type' => 'youtube', 'embed' => 'https://www.youtube.com/embed/' . rawurlencode($m[2]), 'url' => $url];
+        }
+    }
+
+    if (strpos($host, 'tiktok.com') !== false && preg_match('#/video/(\d+)#', $path, $m)) {
+        return ['type' => 'tiktok', 'embed' => 'https://www.tiktok.com/embed/v2/' . $m[1], 'url' => $url];
+    }
+
+    if (strpos($host, 'drive.google.com') !== false && preg_match('#/file/d/([^/]+)#', $path, $m)) {
+        return ['type' => 'drive', 'embed' => 'https://drive.google.com/file/d/' . rawurlencode($m[1]) . '/preview', 'url' => $url];
+    }
+
+    return ['type' => 'link', 'embed' => '', 'url' => $url];
+}
+
+function delete_upload(?string $photo): void
+{
+    if (!$photo || strpos($photo, 'uploads/') !== 0) {
+        return;
+    }
+    $old = ROOT_PATH . DIRECTORY_SEPARATOR . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $photo);
+    if (is_file($old)) {
+        @unlink($old);
+    }
 }
 
 function whatsapp_link(?array $machine = null): string
@@ -186,14 +314,58 @@ function handle_upload(?array $file, ?string $previous = null): ?string
         throw new RuntimeException('No se pudo guardar la foto.');
     }
 
-    if ($previous && strpos($previous, 'uploads/') === 0) {
-        $old = ROOT_PATH . DIRECTORY_SEPARATOR . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $previous);
-        if (is_file($old)) {
-            @unlink($old);
-        }
+    if ($previous) {
+        delete_upload($previous);
     }
 
     return UPLOAD_URL . $name;
+}
+
+function normalize_files_array(?array $files): array
+{
+    if (!$files || !isset($files['name'])) {
+        return [];
+    }
+
+    if (!is_array($files['name'])) {
+        return [$files];
+    }
+
+    $out = [];
+    foreach ($files['name'] as $i => $name) {
+        $out[] = [
+            'name' => $name,
+            'type' => $files['type'][$i] ?? '',
+            'tmp_name' => $files['tmp_name'][$i] ?? '',
+            'error' => $files['error'][$i] ?? UPLOAD_ERR_NO_FILE,
+            'size' => $files['size'][$i] ?? 0,
+        ];
+    }
+    return $out;
+}
+
+function handle_uploads(?array $files, array $keep = []): array
+{
+    $keep = array_values(array_filter(array_map(static function ($photo) {
+        $photo = str_replace('\\', '/', trim((string) $photo));
+        return photo_exists($photo) ? $photo : null;
+    }, $keep)));
+
+    $photos = $keep;
+    foreach (normalize_files_array($files) as $file) {
+        if (($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+            continue;
+        }
+        if (count($photos) >= MAX_PHOTOS) {
+            throw new InvalidArgumentException('Podés subir hasta ' . MAX_PHOTOS . ' fotos por máquina.');
+        }
+        $uploaded = handle_upload($file, null);
+        if ($uploaded) {
+            $photos[] = $uploaded;
+        }
+    }
+
+    return array_values(array_unique($photos));
 }
 
 function sanitize_machine_input(array $input): array
@@ -202,6 +374,7 @@ function sanitize_machine_input(array $input): array
     $category = (string) ($input['category'] ?? '');
     $description = trim((string) ($input['description'] ?? ''));
     $rented = !empty($input['rented']);
+    $videos = sanitize_video_urls($input['videos'] ?? ($input['video_urls'] ?? ''));
 
     if ($name === '') {
         throw new InvalidArgumentException('El nombre de la máquina es obligatorio.');
@@ -218,6 +391,7 @@ function sanitize_machine_input(array $input): array
         'category' => $category,
         'description' => clip($description, 600),
         'rented' => $rented,
+        'videos' => $videos,
     ];
 }
 

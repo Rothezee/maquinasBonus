@@ -10,8 +10,11 @@
     const categoryInput = document.getElementById('form-category');
     const descriptionInput = document.getElementById('form-description');
     const rentedInput = document.getElementById('form-rented');
-    const photoInput = document.getElementById('form-photo');
-    const preview = document.getElementById('form-preview');
+    const photosInput = document.getElementById('form-photos');
+    const videosInput = document.getElementById('form-videos');
+    const keepInput = document.getElementById('form-keep-photos');
+    const keepBox = document.getElementById('photo-keep');
+    const previewGrid = document.getElementById('photo-preview-grid');
     const errorBox = document.getElementById('form-error');
     const list = document.getElementById('admin-list');
     const empty = document.getElementById('admin-empty');
@@ -19,16 +22,62 @@
 
     if (!modal || !form) return;
 
+    let keepPhotos = [];
+
     function showError(message) {
         errorBox.hidden = !message;
         errorBox.textContent = message || '';
     }
 
+    function syncKeepInput() {
+        keepInput.value = JSON.stringify(keepPhotos);
+    }
+
+    function renderKeepPhotos() {
+        keepBox.innerHTML = '';
+        if (!keepPhotos.length) {
+            keepBox.hidden = true;
+            syncKeepInput();
+            return;
+        }
+        keepBox.hidden = false;
+        keepPhotos.forEach(function (src, index) {
+            const item = document.createElement('div');
+            item.className = 'photo-keep-item';
+            item.innerHTML =
+                '<img src="' + src + '" alt="">' +
+                '<button type="button" class="btn btn-tiny btn-danger" data-remove="' + index + '">Quitar</button>';
+            keepBox.appendChild(item);
+        });
+        syncKeepInput();
+    }
+
+    function renderNewPreviews() {
+        previewGrid.innerHTML = '';
+        const files = photosInput.files ? Array.from(photosInput.files) : [];
+        if (!files.length) {
+            previewGrid.hidden = true;
+            return;
+        }
+        previewGrid.hidden = false;
+        files.forEach(function (file) {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            img.alt = file.name;
+            previewGrid.appendChild(img);
+        });
+    }
+
     function openModal(mode, data) {
         form.reset();
         showError('');
-        preview.hidden = true;
-        preview.removeAttribute('src');
+        keepPhotos = [];
+        previewGrid.hidden = true;
+        previewGrid.innerHTML = '';
+        keepBox.hidden = true;
+        keepBox.innerHTML = '';
+        syncKeepInput();
+
         if (mode === 'edit' && data) {
             title.textContent = 'Editar máquina';
             action.value = 'update';
@@ -37,15 +86,25 @@
             categoryInput.value = data.category;
             descriptionInput.value = data.description;
             rentedInput.checked = data.rented === '1';
-            if (data.photo) {
-                preview.src = data.photo;
-                preview.hidden = false;
+            try {
+                keepPhotos = JSON.parse(data.photos || '[]') || [];
+            } catch (e) {
+                keepPhotos = [];
             }
+            let videos = [];
+            try {
+                videos = JSON.parse(data.videos || '[]') || [];
+            } catch (e2) {
+                videos = [];
+            }
+            videosInput.value = videos.join('\n');
+            renderKeepPhotos();
             submitBtn.textContent = 'Guardar cambios';
         } else {
             title.textContent = 'Agregar máquina';
             action.value = 'create';
             idInput.value = '';
+            videosInput.value = '';
             submitBtn.textContent = 'Guardar máquina';
         }
         modal.hidden = false;
@@ -64,14 +123,14 @@
         if (event.target === modal) close();
     });
 
-    photoInput.addEventListener('change', function () {
-        const file = photoInput.files && photoInput.files[0];
-        if (!file) {
-            preview.hidden = true;
-            return;
-        }
-        preview.src = URL.createObjectURL(file);
-        preview.hidden = false;
+    photosInput.addEventListener('change', renderNewPreviews);
+
+    keepBox.addEventListener('click', function (event) {
+        const btn = event.target.closest('[data-remove]');
+        if (!btn) return;
+        const index = Number(btn.getAttribute('data-remove'));
+        keepPhotos.splice(index, 1);
+        renderKeepPhotos();
     });
 
     document.addEventListener('click', function (event) {
@@ -102,6 +161,7 @@
         event.preventDefault();
         showError('');
         submitBtn.disabled = true;
+        syncKeepInput();
         const data = new FormData(form);
         if (!rentedInput.checked) data.delete('rented');
 

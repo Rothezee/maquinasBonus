@@ -80,14 +80,44 @@ $filter = isset($_GET['cat']) && isset(CATEGORIES[$_GET['cat']]) ? $_GET['cat'] 
 
             <div class="machine-grid" id="machine-grid">
                 <?php foreach ($machines as $machine): ?>
-                    <?php $rented = !empty($machine['rented']); ?>
+                    <?php
+                    $rented = !empty($machine['rented']);
+                    $photos = machine_photos($machine);
+                    $videos = machine_videos($machine);
+                    $nameLower = function_exists('mb_strtolower')
+                        ? mb_strtolower($machine['name'] ?? '')
+                        : strtolower($machine['name'] ?? '');
+                    ?>
                     <article
                         class="machine-card<?php echo $rented ? ' is-rented' : ''; ?>"
                         data-category="<?php echo e($machine['category'] ?? ''); ?>"
-                        data-name="<?php echo e(mb_strtolower($machine['name'] ?? '')); ?>"
+                        data-name="<?php echo e($nameLower); ?>"
+                        data-machine="<?php echo e(json_encode([
+                            'id' => $machine['id'] ?? '',
+                            'name' => $machine['name'] ?? '',
+                            'category' => category_label($machine['category'] ?? ''),
+                            'description' => $machine['description'] ?? '',
+                            'rented' => $rented,
+                            'photos' => $photos,
+                            'videos' => array_map('video_embed', $videos),
+                            'whatsapp' => whatsapp_link($machine),
+                        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)); ?>"
                     >
-                        <div class="photo">
-                            <img src="<?php echo e(machine_photo($machine)); ?>" alt="<?php echo e($machine['name'] ?? ''); ?>">
+                        <div class="photo carousel" data-carousel>
+                            <div class="carousel-track">
+                                <?php foreach ($photos as $i => $src): ?>
+                                    <img src="<?php echo e($src); ?>" alt="<?php echo e($machine['name'] ?? ''); ?>" <?php echo $i === 0 ? '' : 'hidden'; ?> data-slide="<?php echo (int) $i; ?>">
+                                <?php endforeach; ?>
+                            </div>
+                            <?php if (count($photos) > 1): ?>
+                                <button class="carousel-btn prev" type="button" data-carousel-prev aria-label="Foto anterior">‹</button>
+                                <button class="carousel-btn next" type="button" data-carousel-next aria-label="Foto siguiente">›</button>
+                                <div class="carousel-dots" data-carousel-dots>
+                                    <?php foreach ($photos as $i => $_): ?>
+                                        <button type="button" class="carousel-dot<?php echo $i === 0 ? ' is-active' : ''; ?>" data-carousel-goto="<?php echo (int) $i; ?>" aria-label="Ir a foto <?php echo (int) ($i + 1); ?>"></button>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
                             <?php if ($rented): ?>
                                 <div class="rented-banner" aria-label="Alquilada">
                                     <span>Alquilada</span>
@@ -100,11 +130,14 @@ $filter = isset($_GET['cat']) && isset(CATEGORIES[$_GET['cat']]) ? $_GET['cat'] 
                         <div class="body">
                             <h3><?php echo e($machine['name'] ?? ''); ?></h3>
                             <p><?php echo e($machine['description'] ?? ''); ?></p>
-                            <?php if ($rented): ?>
-                                <span class="btn btn-disabled">No disponible</span>
-                            <?php else: ?>
-                                <a class="btn btn-gold" href="<?php echo e(whatsapp_link($machine)); ?>" target="_blank" rel="noopener">Consultar por WhatsApp</a>
-                            <?php endif; ?>
+                            <div class="card-actions">
+                                <button class="btn btn-ghost js-open-machine" type="button">Ver más</button>
+                                <?php if ($rented): ?>
+                                    <span class="btn btn-disabled">No disponible</span>
+                                <?php else: ?>
+                                    <a class="btn btn-gold" href="<?php echo e(whatsapp_link($machine)); ?>" target="_blank" rel="noopener">Consultar</a>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </article>
                 <?php endforeach; ?>
@@ -183,6 +216,30 @@ $filter = isset($_GET['cat']) && isset(CATEGORIES[$_GET['cat']]) ? $_GET['cat'] 
         </div>
     </footer>
     <p class="legal">© <?php echo date('Y'); ?> <?php echo e(SITE_NAME); ?> PLAYPARK. Todos los derechos reservados.</p>
+
+    <div class="modal viewer-modal" id="machine-viewer" hidden>
+        <div class="modal-card viewer-card">
+            <button class="modal-close" type="button" id="close-viewer" aria-label="Cerrar">×</button>
+            <div class="viewer-layout">
+                <div class="photo carousel viewer-carousel" data-viewer-carousel>
+                    <div class="carousel-track" id="viewer-track"></div>
+                    <button class="carousel-btn prev" type="button" data-viewer-prev aria-label="Foto anterior">‹</button>
+                    <button class="carousel-btn next" type="button" data-viewer-next aria-label="Foto siguiente">›</button>
+                    <div class="carousel-dots" id="viewer-dots"></div>
+                </div>
+                <div class="viewer-body">
+                    <p class="cat-pill" id="viewer-category"></p>
+                    <h2 id="viewer-title"></h2>
+                    <p id="viewer-status" class="viewer-status"></p>
+                    <p id="viewer-description"></p>
+                    <div id="viewer-videos" class="viewer-videos" hidden></div>
+                    <div class="viewer-actions">
+                        <a class="btn btn-gold" id="viewer-whatsapp" href="#" target="_blank" rel="noopener">Consultar por WhatsApp</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="assets/js/app.js"></script>
 </body>

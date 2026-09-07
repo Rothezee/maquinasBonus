@@ -94,7 +94,15 @@
         "category": "peluches",
         "description": "Maquina de peluches 60x60 perfecta para locales pequeños y que busquen facil movilidad",
         "rented": false,
+        "videos": [],
         "id": "99453fa4a94b5eda",
+        "photos": [
+            "uploads\/maq_932cadc844589501.jpg",
+            "uploads\/maq_6002397f867c9d8c.jpg",
+            "uploads\/maq_d1ce0d7b5b139aba.jpg",
+            "uploads\/maq_1528aca206b7b1d0.jpg",
+            "uploads\/maq_e13db74173fdcc8c.jpg"
+        ],
         "photo": "uploads\/maq_932cadc844589501.jpg",
         "created_at": "2026-09-03 16:11:02"
     }

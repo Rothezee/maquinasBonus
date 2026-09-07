@@ -26,6 +26,8 @@ define('HOURS', 'Lunes a sábado, 10:00 a 22:00 · Domingos, 15:00 a 22:00');
 define('ADMIN_PASSWORD', 'bonus2026');
 
 define('MAX_UPLOAD_BYTES', 5 * 1024 * 1024);
+define('MAX_PHOTOS', 8);
+define('MAX_VIDEOS', 5);
 
 const CATEGORIES = [
     'peluches' => [

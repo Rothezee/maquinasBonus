@@ -35,7 +35,7 @@ $stats = stats($machines);
             <div>
                 <p class="eyebrow">Gestión</p>
                 <h1>Máquinas del local</h1>
-                <p>Cargá fotos, descripciones y marcá las que están alquiladas. El cartel se ve al instante en la web.</p>
+                <p>Cargá varias fotos, links de video y marcá las que están alquiladas. El cartel se ve al instante en la web.</p>
             </div>
             <button class="btn btn-gold" type="button" id="open-create">+ Agregar máquina</button>
         </section>
@@ -49,10 +49,15 @@ $stats = stats($machines);
 
         <section class="admin-list" id="admin-list">
             <?php foreach ($machines as $machine): ?>
-                <?php $rented = !empty($machine['rented']); ?>
+                <?php
+                $rented = !empty($machine['rented']);
+                $photos = machine_photos($machine);
+                $videos = machine_videos($machine);
+                $stored = stored_machine_photos($machine);
+                ?>
                 <article class="admin-card<?php echo $rented ? ' is-rented' : ''; ?>" data-id="<?php echo e($machine['id']); ?>">
                     <div class="photo">
-                        <img src="<?php echo e(machine_photo($machine)); ?>" alt="">
+                        <img src="<?php echo e($photos[0]); ?>" alt="">
                         <?php if ($rented): ?>
                             <div class="rented-banner"><span>Alquilada</span></div>
                         <?php endif; ?>
@@ -61,6 +66,10 @@ $stats = stats($machines);
                         <p class="cat-pill"><?php echo e(category_full($machine['category'] ?? '')); ?></p>
                         <h3><?php echo e($machine['name'] ?? ''); ?></h3>
                         <p><?php echo e($machine['description'] ?? ''); ?></p>
+                        <p class="admin-meta">
+                            <?php echo count($stored); ?> foto<?php echo count($stored) === 1 ? '' : 's'; ?>
+                            · <?php echo count($videos); ?> video<?php echo count($videos) === 1 ? '' : 's'; ?>
+                        </p>
                         <div class="admin-actions">
                             <button type="button" class="btn btn-tiny js-toggle" data-id="<?php echo e($machine['id']); ?>">
                                 <?php echo $rented ? 'Marcar disponible' : 'Marcar alquilada'; ?>
@@ -73,7 +82,8 @@ $stats = stats($machines);
                                 data-category="<?php echo e($machine['category'] ?? ''); ?>"
                                 data-description="<?php echo e($machine['description'] ?? ''); ?>"
                                 data-rented="<?php echo $rented ? '1' : '0'; ?>"
-                                data-photo="<?php echo e(machine_photo($machine)); ?>"
+                                data-photos="<?php echo e(json_encode($stored, JSON_UNESCAPED_SLASHES)); ?>"
+                                data-videos="<?php echo e(json_encode($videos, JSON_UNESCAPED_SLASHES)); ?>"
                             >Editar</button>
                             <button type="button" class="btn btn-tiny btn-danger js-delete" data-id="<?php echo e($machine['id']); ?>">Quitar</button>
                         </div>
@@ -92,6 +102,7 @@ $stats = stats($machines);
                 <input type="hidden" name="csrf" value="<?php echo e(csrf_token()); ?>">
                 <input type="hidden" name="action" id="form-action" value="create">
                 <input type="hidden" name="id" id="form-id" value="">
+                <input type="hidden" name="keep_photos" id="form-keep-photos" value="[]">
 
                 <label>
                     Nombre
@@ -114,11 +125,18 @@ $stats = stats($machines);
                 </label>
 
                 <label class="file-label">
-                    Foto
-                    <input type="file" name="photo" id="form-photo" accept="image/jpeg,image/png,image/webp,image/gif">
-                    <small>JPG, PNG, WEBP o GIF · máx. 5 MB</small>
+                    Fotos
+                    <input type="file" name="photos[]" id="form-photos" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
+                    <small>Podés subir hasta <?php echo (int) MAX_PHOTOS; ?> fotos · JPG, PNG, WEBP o GIF · máx. 5 MB c/u</small>
                 </label>
-                <img class="preview" id="form-preview" alt="Vista previa" hidden>
+                <div class="photo-keep" id="photo-keep" hidden></div>
+                <div class="photo-preview-grid" id="photo-preview-grid" hidden></div>
+
+                <label>
+                    Videos (links)
+                    <textarea name="videos" id="form-videos" rows="3" placeholder="Un link por línea&#10;YouTube, TikTok o Google Drive"></textarea>
+                    <small>Hasta <?php echo (int) MAX_VIDEOS; ?> links. Ejemplo: https://youtu.be/...</small>
+                </label>
 
                 <label class="check">
                     <input type="checkbox" name="rented" id="form-rented" value="1">
