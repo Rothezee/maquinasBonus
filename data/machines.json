@@ -8,13 +8,13 @@
         "videos": [],
         "id": "99453fa4a94b5eda",
         "photos": [
-            "uploads\/maq_932cadc844589501.jpg",
-            "uploads\/maq_6002397f867c9d8c.jpg",
-            "uploads\/maq_d1ce0d7b5b139aba.jpg",
-            "uploads\/maq_1528aca206b7b1d0.jpg",
-            "uploads\/maq_e13db74173fdcc8c.jpg"
+            "uploads/maq_932cadc844589501.jpg",
+            "uploads/maq_6002397f867c9d8c.jpg",
+            "uploads/maq_d1ce0d7b5b139aba.jpg",
+            "uploads/maq_1528aca206b7b1d0.jpg",
+            "uploads/maq_e13db74173fdcc8c.jpg"
         ],
-        "photo": "uploads\/maq_932cadc844589501.jpg",
+        "photo": "uploads/maq_932cadc844589501.jpg",
         "created_at": "2026-09-03 16:11:02"
     },
     {
@@ -26,11 +26,105 @@
         "videos": [],
         "id": "6cf3417a51ad7d1b",
         "photos": [
-            "uploads\/maq_4b9035429dcceb13.jpg",
-            "uploads\/maq_ecffe8d821a6be1f.jpg",
-            "uploads\/maq_5a5c0a7764825e7b.jpg"
+            "uploads/maq_4b9035429dcceb13.jpg",
+            "uploads/maq_ecffe8d821a6be1f.jpg",
+            "uploads/maq_5a5c0a7764825e7b.jpg"
         ],
-        "photo": "uploads\/maq_4b9035429dcceb13.jpg",
+        "photo": "uploads/maq_4b9035429dcceb13.jpg",
         "created_at": "2026-09-06 22:11:54"
+    },
+    {
+        "name": "UFO CATCHER (SEGA)",
+        "category": "peluches",
+        "description": "Maquina grande, super llamativa",
+        "rented": false,
+        "sold": false,
+        "videos": [],
+        "id": "5d37428693dfcaf3",
+        "photos": [
+            "uploads/maq_7e249be89838c532.jpg",
+            "uploads/maq_59bacd686ac89042.jpg"
+        ],
+        "photo": "uploads/maq_7e249be89838c532.jpg",
+        "created_at": "2026-09-07 20:03:23"
+    },
+    {
+        "name": "Camion MACK",
+        "category": "kiddies",
+        "description": "Venta o alquiler de camionsito para niños, perfecta para cumpleaños, eventos, locales. Comunicarse por WhatsApp para más información",
+        "rented": false,
+        "sold": false,
+        "videos": [
+            "https://drive.google.com/file/d/1pqo7dUlr2F-VqFKsc4jXC7KPkOkRcYN7/view?usp=drive_link"
+        ],
+        "id": "3580a8b967ee5ccd",
+        "photos": [
+            "uploads/maq_89a385b69f2751f1.jpg",
+            "uploads/maq_0aecf1e23ce8cd7d.jpg",
+            "uploads/maq_b30a9daffee68bab.jpg"
+        ],
+        "photo": "uploads/maq_89a385b69f2751f1.jpg",
+        "created_at": "2026-09-07 20:05:11"
+    },
+    {
+        "name": "Mini Jeep",
+        "category": "kiddies",
+        "description": "Venta o alquiler de Autito para niños, perfecta para cumpleaños, eventos, locales. Comunicarse por WhatsApp para más información",
+        "rented": false,
+        "sold": false,
+        "videos": [
+            "https://drive.google.com/file/d/1w9FMR9zVJyVfOc5zsbxIjq0Eaw8059CV/view?usp=drive_link"
+        ],
+        "id": "5e3308097c4f1ead",
+        "photos": [
+            "uploads/maq_bd4c69e4307bb186.jpg",
+            "uploads/maq_7acfa5ff3c68744f.jpg",
+            "uploads/maq_5834181706aa1dc6.jpg"
+        ],
+        "photo": "uploads/maq_bd4c69e4307bb186.jpg",
+        "created_at": "2026-09-07 20:10:29"
+    },
+    {
+        "name": "Crazy Frog",
+        "categories": [
+            "videojuegos",
+            "tickets"
+        ],
+        "category": "videojuegos",
+        "description": "Maquina de Tickets super entretenida. Se vende o se da en comodato.",
+        "rented": false,
+        "sold": false,
+        "videos": [
+            "https://drive.google.com/file/d/1jpyM4KXBQ38EgZpBhPcQmGzKvTSsORZF/view?usp=drive_link"
+        ],
+        "id": "2f2ebfb0afefe85e",
+        "photos": [
+            "uploads/maq_8eccdd02d68d1149.jpg",
+            "uploads/maq_221d9af6770bf720.jpg",
+            "uploads/maq_e4fa58d28294a2b3.jpg"
+        ],
+        "photo": "uploads/maq_8eccdd02d68d1149.jpg",
+        "created_at": "2026-09-07 20:14:07"
+    },
+    {
+        "name": "Trensito",
+        "categories": [
+            "kiddies"
+        ],
+        "category": "kiddies",
+        "description": "Venta o alquiler de Trensito para niños, perfecta para cumpleaños, eventos, locales. Comunicarse por WhatsApp para más información.",
+        "rented": false,
+        "sold": false,
+        "videos": [
+            "https://drive.google.com/file/d/1ukYonx376VB04B-ouHNCgqb9JHIcLP1R/view?usp=drive_link"
+        ],
+        "id": "9be8e7d3b6588eb5",
+        "photos": [
+            "uploads/maq_ad1576ece8296920.jpg",
+            "uploads/maq_6eddf8c22e9cb465.jpg",
+            "uploads/maq_354350e5a2d5f99e.jpg"
+        ],
+        "photo": "uploads/maq_ad1576ece8296920.jpg",
+        "created_at": "2026-09-07 20:38:44"
     }
 ]

@@ -7,7 +7,7 @@
     const action = document.getElementById('form-action');
     const idInput = document.getElementById('form-id');
     const nameInput = document.getElementById('form-name');
-    const categoryInput = document.getElementById('form-category');
+    const categoryChecks = form.querySelectorAll('.js-category-check');
     const descriptionInput = document.getElementById('form-description');
     const rentedInput = document.getElementById('form-rented');
     const soldInput = document.getElementById('form-sold');
@@ -69,6 +69,21 @@
         });
     }
 
+    function setCategories(keys) {
+        const list = Array.isArray(keys) ? keys : [];
+        categoryChecks.forEach(function (cb) {
+            cb.checked = list.indexOf(cb.value) !== -1;
+        });
+    }
+
+    function selectedCategories() {
+        const out = [];
+        categoryChecks.forEach(function (cb) {
+            if (cb.checked) out.push(cb.value);
+        });
+        return out;
+    }
+
     function openModal(mode, data) {
         form.reset();
         showError('');
@@ -78,13 +93,23 @@
         keepBox.hidden = true;
         keepBox.innerHTML = '';
         syncKeepInput();
+        setCategories([]);
 
         if (mode === 'edit' && data) {
             title.textContent = 'Editar máquina';
             action.value = 'update';
             idInput.value = data.id;
             nameInput.value = data.name;
-            categoryInput.value = data.category;
+            let cats = [];
+            try {
+                cats = JSON.parse(data.categories || '[]') || [];
+            } catch (e) {
+                cats = [];
+            }
+            if (!cats.length && data.category) {
+                cats = [data.category];
+            }
+            setCategories(cats);
             descriptionInput.value = data.description;
             rentedInput.checked = data.rented === '1';
             soldInput.checked = data.sold === '1';
@@ -170,6 +195,10 @@
     form.addEventListener('submit', function (event) {
         event.preventDefault();
         showError('');
+        if (!selectedCategories().length) {
+            showError('Elegí al menos una categoría.');
+            return;
+        }
         submitBtn.disabled = true;
         syncKeepInput();
         const data = new FormData(form);

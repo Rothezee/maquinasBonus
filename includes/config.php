@@ -59,7 +59,17 @@ const CATEGORIES = [
     'videojuegos' => [
         'label' => 'Videojuegos',
         'full' => 'Videojuegos arcade',
-        'hint' => 'Arcade de pelea, gabinetes y box',
+        'hint' => 'Arcade de pelea y gabinetes',
+    ],
+    'golpes' => [
+        'label' => 'Golpes',
+        'full' => 'Máquinas de golpes',
+        'hint' => 'Box punch y fuerza',
+    ],
+    'tickets' => [
+        'label' => 'Tickets',
+        'full' => 'Máquinas de tickets',
+        'hint' => 'Redención y tickets',
     ],
     'clips' => [
         'label' => 'Clips',

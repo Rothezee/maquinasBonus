@@ -13,12 +13,13 @@ $stats = stats($machines);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Panel — <?php echo e(SITE_NAME); ?></title>
+    <meta name="robots" content="noindex, nofollow">
     <link rel="icon" href="<?php echo e(FAVICON_URL); ?>" type="image/png">
     <link rel="apple-touch-icon" href="<?php echo e(LOGO_CIRCLE_URL); ?>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=5">
+    <link rel="stylesheet" href="assets/css/style.css?v=14">
 </head>
 <body class="admin-body">
     <div class="noise" aria-hidden="true"></div>
@@ -52,9 +53,11 @@ $stats = stats($machines);
                 <?php
                 $rented = !empty($machine['rented']);
                 $sold = !empty($machine['sold']);
-                $photos = machine_photos($machine);
+                $slides = machine_media_slides($machine);
+                $cover = $slides[0] ?? ['type' => 'image', 'src' => default_photo(machine_primary_category($machine))];
                 $videos = machine_videos($machine);
                 $stored = stored_machine_photos($machine);
+                $machineCats = machine_categories($machine);
                 $cardClass = 'admin-card';
                 if ($rented) {
                     $cardClass .= ' is-rented';
@@ -65,7 +68,13 @@ $stats = stats($machines);
                 ?>
                 <article class="<?php echo $cardClass; ?>" data-id="<?php echo e($machine['id']); ?>">
                     <div class="photo">
-                        <img src="<?php echo e($photos[0]); ?>" alt="">
+                        <?php if (($cover['type'] ?? '') === 'video' && !empty($cover['embed'])): ?>
+                            <div class="video-frame">
+                                <iframe src="<?php echo e($cover['embed']); ?>" title="Video" allowfullscreen loading="lazy"></iframe>
+                            </div>
+                        <?php else: ?>
+                            <img src="<?php echo e($cover['src'] ?? default_photo(machine_primary_category($machine))); ?>" alt="">
+                        <?php endif; ?>
                         <?php if ($rented): ?>
                             <div class="rented-banner"><span>Alquilada</span></div>
                         <?php elseif ($sold): ?>
@@ -73,7 +82,11 @@ $stats = stats($machines);
                         <?php endif; ?>
                     </div>
                     <div class="admin-card-body">
-                        <p class="cat-pill"><?php echo e(category_full($machine['category'] ?? '')); ?></p>
+                        <div class="cat-pills">
+                            <?php foreach ($machineCats as $catKey): ?>
+                                <span class="cat-pill"><?php echo e(category_full($catKey)); ?></span>
+                            <?php endforeach; ?>
+                        </div>
                         <h3><?php echo e($machine['name'] ?? ''); ?></h3>
                         <p><?php echo e($machine['description'] ?? ''); ?></p>
                         <p class="admin-meta">
@@ -93,7 +106,7 @@ $stats = stats($machines);
                                 class="btn btn-tiny btn-ghost js-edit"
                                 data-id="<?php echo e($machine['id']); ?>"
                                 data-name="<?php echo e($machine['name'] ?? ''); ?>"
-                                data-category="<?php echo e($machine['category'] ?? ''); ?>"
+                                data-categories="<?php echo e(json_encode($machineCats, JSON_UNESCAPED_UNICODE)); ?>"
                                 data-description="<?php echo e($machine['description'] ?? ''); ?>"
                                 data-rented="<?php echo $rented ? '1' : '0'; ?>"
                                 data-sold="<?php echo $sold ? '1' : '0'; ?>"
@@ -124,15 +137,17 @@ $stats = stats($machines);
                     <input type="text" name="name" id="form-name" maxlength="80" required placeholder="Ej: Grúa de peluches Jumbo">
                 </label>
 
-                <label>
-                    Categoría
-                    <select name="category" id="form-category" required>
-                        <option value="">Elegí una</option>
+                <fieldset class="category-checks">
+                    <legend>Categorías <small>(podés elegir más de una)</small></legend>
+                    <div class="category-check-grid" id="form-categories">
                         <?php foreach (CATEGORIES as $key => $cat): ?>
-                            <option value="<?php echo e($key); ?>"><?php echo e($cat['full']); ?></option>
+                            <label class="check">
+                                <input type="checkbox" name="categories[]" value="<?php echo e($key); ?>" class="js-category-check">
+                                <?php echo e($cat['full']); ?>
+                            </label>
                         <?php endforeach; ?>
-                    </select>
-                </label>
+                    </div>
+                </fieldset>
 
                 <label>
                     Descripción
@@ -169,6 +184,6 @@ $stats = stats($machines);
         </div>
     </div>
 
-    <script src="assets/js/admin.js?v=5"></script>
+    <script src="assets/js/admin.js?v=6"></script>
 </body>
 </html>

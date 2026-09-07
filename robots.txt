@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /login.php
+Disallow: /admin.php
+Disallow: /api.php
+Disallow: /logout.php
+Disallow: /data/
 
 Sitemap: https://maquinasbonus.com/sitemap.xml

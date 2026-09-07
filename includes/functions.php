@@ -90,6 +90,48 @@ function category_full(string $key): string
     return CATEGORIES[$key]['full'] ?? $key;
 }
 
+/** @return list<string> */
+function machine_categories(array $machine): array
+{
+    $out = [];
+    if (!empty($machine['categories']) && is_array($machine['categories'])) {
+        foreach ($machine['categories'] as $key) {
+            $key = (string) $key;
+            if (isset(CATEGORIES[$key])) {
+                $out[] = $key;
+            }
+        }
+    } elseif (!empty($machine['category'])) {
+        $key = (string) $machine['category'];
+        if (isset(CATEGORIES[$key])) {
+            $out[] = $key;
+        }
+    }
+    return array_values(array_unique($out));
+}
+
+function machine_primary_category(array $machine): string
+{
+    $cats = machine_categories($machine);
+    return $cats[0] ?? 'peluches';
+}
+
+/** @return list<string> */
+function machine_category_labels(array $machine): array
+{
+    $labels = [];
+    foreach (machine_categories($machine) as $key) {
+        $labels[] = category_label($key);
+    }
+    return $labels;
+}
+
+function machine_categories_text(array $machine, string $sep = ' · '): string
+{
+    $labels = machine_category_labels($machine);
+    return $labels ? implode($sep, $labels) : '';
+}
+
 function default_photo(string $category): string
 {
     $file = 'assets/img/defaults/' . $category . '.svg';
@@ -136,7 +178,7 @@ function machine_photos(array $machine): array
 {
     $photos = stored_machine_photos($machine);
     if (!$photos) {
-        return [default_photo($machine['category'] ?? 'peluches')];
+        return [default_photo($machine['category'] ?? machine_primary_category($machine))];
     }
     return $photos;
 }
@@ -159,6 +201,44 @@ function machine_videos(array $machine): array
         }
     }
     return array_values(array_unique($out));
+}
+
+/**
+ * Slides for carousel: photos first, then videos.
+ * If there are no photos, videos become the cover.
+ * If there is nothing, falls back to the category default image.
+ *
+ * @return list<array{type:string,src?:string,embed?:string,url?:string,provider?:string}>
+ */
+function machine_media_slides(array $machine): array
+{
+    $slides = [];
+
+    foreach (stored_machine_photos($machine) as $src) {
+        $slides[] = [
+            'type' => 'image',
+            'src' => $src,
+        ];
+    }
+
+    foreach (machine_videos($machine) as $url) {
+        $info = video_embed($url);
+        $slides[] = [
+            'type' => 'video',
+            'embed' => (string) ($info['embed'] ?? ''),
+            'url' => (string) ($info['url'] ?? $url),
+            'provider' => (string) ($info['type'] ?? 'link'),
+        ];
+    }
+
+    if (!$slides) {
+        $slides[] = [
+            'type' => 'image',
+            'src' => default_photo(machine_primary_category($machine)),
+        ];
+    }
+
+    return $slides;
 }
 
 function sanitize_video_urls($raw): array
@@ -268,7 +348,7 @@ function franchise_whatsapp(): string
 
 function comodato_whatsapp(): string
 {
-    $text = 'Hola, quiero info del comodato a porcentaje para poner una máquina de ' . SITE_NAME . ' en mi local.';
+    $text = 'Hola, quiero info para poner una máquina de ' . SITE_NAME . ' en mi local y cobrar mi porcentaje.';
     return 'https://wa.me/' . WHATSAPP . '?text=' . rawurlencode($text);
 }
 
@@ -388,17 +468,33 @@ function handle_uploads(?array $files, array $keep = []): array
 function sanitize_machine_input(array $input): array
 {
     $name = trim((string) ($input['name'] ?? ''));
-    $category = (string) ($input['category'] ?? '');
     $description = trim((string) ($input['description'] ?? ''));
     $rented = !empty($input['rented']);
     $sold = !empty($input['sold']);
     $videos = sanitize_video_urls($input['videos'] ?? ($input['video_urls'] ?? ''));
 
+    $rawCats = $input['categories'] ?? ($input['category'] ?? []);
+    if (is_string($rawCats)) {
+        $rawCats = $rawCats === '' ? [] : [$rawCats];
+    }
+    if (!is_array($rawCats)) {
+        $rawCats = [];
+    }
+
+    $categories = [];
+    foreach ($rawCats as $key) {
+        $key = (string) $key;
+        if (isset(CATEGORIES[$key])) {
+            $categories[] = $key;
+        }
+    }
+    $categories = array_values(array_unique($categories));
+
     if ($name === '') {
         throw new InvalidArgumentException('El nombre de la máquina es obligatorio.');
     }
-    if (!isset(CATEGORIES[$category])) {
-        throw new InvalidArgumentException('Elegí una categoría válida.');
+    if (!$categories) {
+        throw new InvalidArgumentException('Elegí al menos una categoría.');
     }
     if ($description === '') {
         throw new InvalidArgumentException('Agregá una descripción.');
@@ -406,7 +502,8 @@ function sanitize_machine_input(array $input): array
 
     return [
         'name' => clip($name, 80),
-        'category' => $category,
+        'categories' => $categories,
+        'category' => $categories[0],
         'description' => clip($description, 600),
         'rented' => $rented,
         'sold' => $sold,
@@ -445,7 +542,7 @@ function brand_html(string $variant = 'nav', string $subtitle = ''): string
         $subtitle = SITE_BRAND;
     }
     $html = '<a class="brand brand-' . e($variant) . '" href="index.php">';
-    $html .= '<img class="brand-mark-img" src="' . e(LOGO_CIRCLE_URL) . '" alt="' . e(SITE_NAME) . '">';
+    $html .= '<img class="brand-mark-img" src="' . e(LOGO_CIRCLE_URL) . '" alt="' . e(SITE_NAME) . ' PLAYPARK">';
     $html .= '<span class="brand-text"><strong>' . e(SITE_NAME) . '</strong><small>' . e($subtitle) . '</small></span>';
     $html .= '</a>';
     return $html;

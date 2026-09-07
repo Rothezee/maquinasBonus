@@ -1,0 +1,21 @@
+AddDefaultCharset UTF-8
+Options -Indexes
+
+# Isolar el catálogo en /www y no tocar /pruebas (subdominio app)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Preferir dominio canónico sin www
+    RewriteCond %{HTTP_HOST} ^www\.maquinasbonus\.com$ [NC]
+    RewriteRule ^(.*)$ https://maquinasbonus.com/$1 [R=301,L]
+
+    # No reescribir la carpeta del subdominio ni la propia /www
+    RewriteRule ^pruebas(/|$) - [L]
+    RewriteRule ^www(/|$) - [L]
+
+    # Solo dominio principal (y www.)
+    RewriteCond %{HTTP_HOST} ^(www\.)?maquinasbonus\.com$ [NC]
+    RewriteCond %{REQUEST_URI} !^/www/
+    RewriteCond %{REQUEST_URI} !^/pruebas/
+    RewriteRule ^(.*)$ /www/$1 [L]
+</IfModule>

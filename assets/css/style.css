@@ -275,6 +275,58 @@ a { color: inherit; }
     line-height: 1.55;
 }
 
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.hero-actions .btn {
+    min-height: 48px;
+    padding-inline: 20px;
+}
+
+.hero {
+    padding-bottom: 40px;
+}
+
+.hero h1 {
+    max-width: 14ch;
+}
+
+.hero .lede {
+    max-width: 36ch;
+    font-size: clamp(1.02rem, 3.6vw, 1.15rem);
+}
+
+.hero-highlight {
+    margin: 10px 0 14px;
+    max-width: 18ch;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: clamp(1.7rem, 6.5vw, 2.45rem);
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+    color: var(--gold);
+}
+
+.hero-proof {
+    grid-template-columns: repeat(2, minmax(0, 220px));
+    margin-top: 22px;
+    margin-bottom: 4px;
+}
+
+.hero-proof div {
+    font-size: 0.92rem;
+    line-height: 1.35;
+    color: var(--muted);
+}
+
+.hero-proof em {
+    font-size: clamp(1.8rem, 5vw, 2.2rem);
+    margin-bottom: 2px;
+}
+
 .hero-stats {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 180px));
@@ -422,7 +474,8 @@ a { color: inherit; }
 }
 
 .photo img[hidden],
-.carousel-track img[hidden] {
+.carousel-track img[hidden],
+.carousel-track [hidden] {
     display: none !important;
 }
 
@@ -431,8 +484,41 @@ a { color: inherit; }
 }
 
 .carousel-track {
+    position: relative;
     width: 100%;
     height: 100%;
+}
+
+.carousel-track > img,
+.carousel-track > .carousel-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #09070f;
+}
+
+.carousel-slide .video-frame {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    aspect-ratio: auto;
+}
+
+.carousel-slide .video-frame iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.video-link-slide {
+    z-index: 2;
 }
 
 .carousel-btn {
@@ -479,6 +565,13 @@ a { color: inherit; }
 
 .carousel-dot.is-active {
     background: var(--gold);
+}
+
+.carousel-dot.is-video {
+    border-radius: 3px;
+    transform: rotate(45deg);
+    width: 7px;
+    height: 7px;
 }
 
 .card-actions {
@@ -551,6 +644,13 @@ a { color: inherit; }
     border: 1px solid rgba(62, 224, 160, 0.4);
 }
 
+.cat-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+
 .machine-card .cat-pill,
 .admin-card .cat-pill,
 .viewer-body .cat-pill {
@@ -560,12 +660,20 @@ a { color: inherit; }
     display: inline-block;
 }
 
-.machine-card .photo .cat-pill {
+.machine-card .photo .cat-pills {
     position: absolute;
+    bottom: 12px;
+    left: 12px;
+    max-width: calc(100% - 24px);
+    z-index: 3;
 }
 
-.machine-card .photo.carousel .cat-pill {
+.machine-card .photo.carousel .cat-pills {
     bottom: 28px;
+}
+
+.admin-card-body .cat-pills {
+    margin-bottom: 6px;
 }
 
 .body,
@@ -705,6 +813,38 @@ a { color: inherit; }
     gap: 14px;
 }
 
+.deal-modes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.deal-mode {
+    padding: 16px;
+    border-radius: 18px;
+    border: 1px solid var(--line);
+    background: rgba(8, 6, 15, 0.35);
+}
+
+.deal-mode h3 {
+    margin: 0 0 8px;
+    font-size: clamp(1.45rem, 3.5vw, 1.9rem);
+}
+
+.deal-mode p {
+    margin: 0 0 10px;
+    font-size: 0.95rem;
+    line-height: 1.45;
+}
+
+.deal-mode .deal-list {
+    margin: 0;
+}
+
+.deal-list-shared {
+    margin-top: 4px;
+}
+
 .deal-hook {
     margin: 0;
     font-size: clamp(1.15rem, 3.4vw, 1.45rem);
@@ -790,6 +930,38 @@ a { color: inherit; }
     line-height: 1.55;
 }
 
+.faq-list {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr;
+}
+
+.faq-item {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 16px 16px 18px;
+    background: var(--card);
+}
+
+.faq-item h3 {
+    margin: 0 0 8px;
+    font-size: clamp(1.05rem, 3.2vw, 1.25rem);
+    line-height: 1.3;
+}
+
+.faq-item p {
+    margin: 0;
+    min-height: 0;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+@media (min-width: 720px) {
+    .faq-list {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
 .viewer-deal {
     margin: 0;
 }
@@ -851,6 +1023,36 @@ a { color: inherit; }
 
 .check input { width: auto; }
 
+.category-checks {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 12px 14px 14px;
+    margin: 0;
+}
+
+.category-checks legend {
+    padding: 0 6px;
+    font-weight: 600;
+}
+
+.category-checks legend small {
+    font-weight: 500;
+    color: var(--muted);
+}
+
+.category-check-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+@media (min-width: 560px) {
+    .category-check-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
 .flash.error {
     background: rgba(255, 93, 108, 0.12);
     color: #ffd0d5;
@@ -879,6 +1081,14 @@ a { color: inherit; }
 }
 
 .admin-card .photo { aspect-ratio: auto; min-height: 140px; }
+
+.admin-card .photo .video-frame {
+    width: 100%;
+    height: 100%;
+    min-height: 140px;
+    aspect-ratio: auto;
+    border-radius: 0;
+}
 
 .admin-actions {
     display: flex;
@@ -966,16 +1176,6 @@ a { color: inherit; }
 .viewer-status.is-available { color: var(--ok); }
 .viewer-status.is-rented { color: var(--danger); }
 .viewer-status.is-sold { color: #94a3b8; }
-
-.viewer-videos {
-    display: grid;
-    gap: 12px;
-}
-
-.viewer-videos h3 {
-    margin: 8px 0 0;
-    font-size: 1rem;
-}
 
 .video-frame {
     position: relative;
@@ -1154,6 +1354,32 @@ a { color: inherit; }
 
     h1 { font-size: clamp(2.35rem, 11vw, 3.4rem); }
 
+    .hero h1 {
+        max-width: 13ch;
+    }
+
+    .hero-highlight {
+        max-width: 16ch;
+    }
+
+    .hero-proof {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .hero-proof div {
+        padding: 12px 12px;
+        font-size: 0.84rem;
+    }
+
+    .cat-card span {
+        display: none;
+    }
+
+    .cat-card img {
+        height: 72px;
+    }
+
     .hero,
     .section,
     .admin-main {
@@ -1193,6 +1419,10 @@ a { color: inherit; }
     }
     .franchise-layout { grid-template-columns: 1fr; }
     .deal-layout { grid-template-columns: 1fr; }
+
+    .deal-modes {
+        grid-template-columns: 1fr;
+    }
 
     .deal-aside {
         order: -1;

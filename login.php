@@ -30,12 +30,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Ingresar - <?php echo e(SITE_NAME); ?></title>
+    <title>Ingresar al panel | <?php echo e(SITE_NAME); ?> PLAYPARK</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Acceso privado al panel de administración de Máquinas Bonus PLAYPARK.">
+    <link rel="canonical" href="<?php echo e(rtrim(SITE_URL, '/') . '/login.php'); ?>">
     <link rel="icon" href="<?php echo e(FAVICON_URL); ?>" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=14">
 </head>
 <body class="auth-body">
     <div class="noise" aria-hidden="true"></div>
