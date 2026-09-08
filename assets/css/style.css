@@ -5,6 +5,8 @@
     --line: rgba(255, 255, 255, 0.16);
     --gold: #ffd23f;
     --gold-2: #ffe37a;
+    --orange: #ff8a1f;
+    --orange-2: #ffb347;
     --magenta: #ff2ea6;
     --cyan: #3ecbff;
     --violet: #6b21c4;
@@ -292,12 +294,19 @@ a { color: inherit; }
 }
 
 .hero h1 {
-    max-width: 14ch;
+    /* El <br> del markup define el corte; no forzar wrap por max-width */
+    max-width: min(100%, 36ch);
 }
 
 .hero .lede {
     max-width: 36ch;
     font-size: clamp(1.02rem, 3.6vw, 1.15rem);
+}
+
+/* Primera frase que ve el cliente: que “instalamos sin cargo” destaque */
+.hero .lede strong {
+    color: var(--orange);
+    font-weight: 800;
 }
 
 .hero-highlight {
@@ -849,11 +858,6 @@ a { color: inherit; }
     margin: 0;
     font-size: clamp(1.15rem, 3.4vw, 1.45rem);
     line-height: 1.45;
-    color: var(--text);
-}
-
-.deal-hook strong {
-    color: var(--gold);
 }
 
 .deal-list {
@@ -1355,7 +1359,7 @@ a { color: inherit; }
     h1 { font-size: clamp(2.35rem, 11vw, 3.4rem); }
 
     .hero h1 {
-        max-width: 13ch;
+        max-width: min(100%, 28ch);
     }
 
     .hero-highlight {

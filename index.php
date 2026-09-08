@@ -7,29 +7,29 @@ $machines = load_machines();
 $filter = isset($_GET['cat']) && isset(CATEGORIES[$_GET['cat']]) ? $_GET['cat'] : 'all';
 
 $pageTitle = 'Máquinas Bonus PLAYPARK | Tu porcentaje sin invertir un peso';
-$pageDescription = 'Poné una grúa de peluches o arcade en tu local sin comprar la máquina. Te llevás del 30% al 50% de las ganancias, directo a tu bolsillo. San Luis y Villa Gesell.';
+$pageDescription = 'Instalamos la máquina sin cargo y transformamos un rincón de tu local en un motivo para que vuelvan. Te llevás del 30% al 50% de las ganancias. San Luis y Villa Gesell.';
 $pageKeywords = 'Máquinas Bonus, Bonus PLAYPARK, Bonus Play Park, alquiler máquinas de peluches, grúas de peluches, comodato a porcentaje, máquinas arcade, claw machine, videojuegos arcade, máquinas de golpes, máquinas de tickets, tejos, pooles, kiddies, San Luis, Villa Gesell';
-$pageOgTitle = 'Máquinas Bonus PLAYPARK | Tu local, tu porcentaje';
-$pageOgDescription = 'Sin invertir un peso: instalamos la máquina y vos te llevás del 30% al 50% de las ganancias, directo a tu bolsillo.';
+$pageOgTitle = 'Máquinas Bonus PLAYPARK | Instalación sin cargo';
+$pageOgDescription = 'Convertí un espacio perdido en un motivo para que tus clientes vuelvan. Instalamos sin cargo y vos te llevás del 30% al 50% de las ganancias.';
 $canonical = rtrim(SITE_URL, '/') . '/';
 $ogImage = $canonical . ltrim(LOGO_CIRCLE_URL, '/');
 $brandName = SITE_NAME . ' PLAYPARK';
 $faqItems = [
     [
         'q' => '¿Cómo funciona el comodato a porcentaje de Máquinas Bonus?',
-        'a' => 'Es simple y pensado para vos. Si la máquina da premio (peluches, clips y similares), te llevás el 30% neto de las ganancias — directo a tu bolsillo — y nosotros cubrimos mercadería y envío. Si no da premio (pool, tejo, videojuegos, carreras), repartimos 50/50. En ambos casos instalamos, damos soporte y compartimos reportes.',
+        'a' => 'Es simple y pensado para vos. Instalamos la máquina sin cargo. Si da premio (peluches, clips y similares), te llevás el 30% neto — directo a tu bolsillo — y nosotros cubrimos mercadería y envío. Si no da premio (pool, tejo, videojuegos, carreras), repartimos 50/50. En ambos casos damos soporte y compartimos reportes.',
     ],
     [
         'q' => '¿Qué máquinas de peluches y arcade ofrecen?',
-        'a' => 'Grúas de peluches, claw machines, videojuegos arcade, arcade de pelea, arcade de carrera, simuladores, máquinas de golpes, máquinas de tickets, tejos, pooles, kiddies y máquinas de clips. Mirás el stock en el catálogo y elegís la que mejor te sirva.',
+        'a' => 'Grúas de peluches, claw machines, videojuegos arcade, arcade de pelea, arcade de carrera, simuladores, máquinas de golpes, máquinas de tickets, tejos, pooles, kiddies y máquinas de clips. Mirás el stock en el catálogo y elegís la que mejor te sirva para ese espacio que hoy no genera nada.',
     ],
     [
         'q' => '¿Dónde está Máquinas Bonus PLAYPARK?',
-        'a' => 'Estamos en San Luis (Artigas 860) y Villa Gesell (Av. 3 975). Te acompañamos con comodato o alquiler para que tu punto genere sin que tengas que comprar la máquina.',
+        'a' => 'Estamos en San Luis (Artigas 860) y Villa Gesell (Av. 3 975). Te acompañamos con comodato o alquiler para transformar un rincón de tu local en un motivo para que vuelvan, sin que tengas que comprar la máquina.',
     ],
     [
         'q' => '¿Alquilan grúas de peluches para locales?',
-        'a' => 'Sí. Te instalamos la máquina y la mantenemos. En peluches y máquinas con premio te llevás el 30% de las ganancias; en arcade sin premio, el 50% es para vos.',
+        'a' => 'Sí. Te instalamos la máquina sin cargo y la mantenemos. En peluches y máquinas con premio te llevás el 30% de las ganancias; en arcade sin premio, el 50% es para vos.',
     ],
 ];
 $schemaLocations = [];
@@ -99,7 +99,7 @@ foreach ($faqItems as $item) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=16">
+    <link rel="stylesheet" href="assets/css/style.css?v=23">
 
     <script type="application/ld+json">
     <?php
@@ -138,17 +138,17 @@ foreach ($faqItems as $item) {
                     [
                         '@type' => 'Offer',
                         'name' => 'Comodato con premio (peluches y similares)',
-                        'description' => 'Te llevás el 30% neto de las ganancias, directo a tu bolsillo. Incluye máquina, mercadería, envío, instalación y mantenimiento.',
+                        'description' => 'Te llevás el 30% neto de las ganancias, directo a tu bolsillo. Incluye máquina, mercadería, envío, instalación sin cargo y mantenimiento.',
                     ],
                     [
                         '@type' => 'Offer',
                         'name' => 'Comodato sin premio (pool, tejo, videojuegos, carreras)',
-                        'description' => 'El 50% de lo que genera la máquina es para vos. Sin mercadería de premios. Incluye instalación y soporte.',
+                        'description' => 'El 50% de lo que genera la máquina es para vos. Instalación sin cargo. Sin mercadería de premios. Incluye soporte.',
                     ],
                     [
                         '@type' => 'Offer',
                         'name' => 'Alquiler y colocación de grúas de peluches y arcade',
-                        'description' => 'Máquinas de peluches, videojuegos, carreras, arcade de pelea, golpes, tickets, tejos, pooles, kiddies y clips para tu local.',
+                        'description' => 'Transformamos un espacio perdido de tu local en un motivo para que vuelvan. Máquinas de peluches, videojuegos, carreras, golpes, tickets, tejos, pooles, kiddies y clips.',
                     ],
                 ],
             ],
@@ -215,9 +215,9 @@ foreach ($faqItems as $item) {
     <main>
         <section class="hero">
             <p class="eyebrow">Máquinas Bonus · PLAYPARK</p>
-            <h1>Tu local, tu porcentaje, sin invertir un peso.</h1>
+            <h1>Tu local<br>tu porcentaje <br>sin invertir un peso.</h1>
             <p class="hero-highlight">30% a 50% de las ganancias, directo a tu bolsillo</p>
-            <p class="lede">Te instalamos grúas de peluches y arcade. Vos te quedás con un porcentaje de las ganancias — <strong>directo a tu bolsillo</strong>. Sin que tengas que comprar la máquina.</p>
+            <p class="lede">Convertí un rincón sin uso en un motivo para que tus clientes vuelvan. <strong>Instalamos la máquina sin cargo</strong> y vos te quedás con un porcentaje de las ganancias — directo a tu bolsillo.</p>
             <div class="hero-stats hero-proof" aria-label="Prueba social">
                 <div>
                     <em>+8</em>
@@ -378,8 +378,8 @@ foreach ($faqItems as $item) {
             </div>
             <div class="deal-layout">
                 <div class="deal-copy">
-                    <p class="deal-hook">No hace falta que compres la máquina. La ponemos nosotros y <strong>vos te llevás tu porcentaje</strong>.</p>
-                    <p class="lede">Te la instalamos, te explicamos cómo funciona y, si falla, la reparamos sin cargo. Cobramos semanal y te mostramos los números reales, sin filtro.</p>
+                    <p class="deal-hook">Ese pasillo vacío o la esquina que nadie mira puede generar visitas y plata. <strong id="install-free">La máquina la instalamos sin cargo</strong> y vos te llevás tu porcentaje.</p>
+                    <p class="lede">La dejamos funcionando, te explicamos cómo opera y, si falla, la reparamos sin cargo. Cobramos semanal y te mostramos los números reales, sin filtro.</p>
 
                     <div class="deal-modes">
                         <article class="deal-mode">
@@ -403,43 +403,27 @@ foreach ($faqItems as $item) {
                     </div>
 
                     <ul class="deal-list deal-list-shared">
-                        <li>Máquina + instalación + explicación incluidas</li>
+                        <li><strong>Instalación sin cargo</strong> + explicación incluida</li>
                         <li>Si falla la máquina, la reparamos sin cargo</li>
                         <li>Cobro semanal y reportes que vos también ves</li>
                     </ul>
-                    <p class="deal-note">Pensado para tu kiosco, tu local o tu punto con tránsito: vos cobrás, nosotros acompañamos.</p>
+                    <p class="deal-note">Pensado para tu kiosco, tu local o ese espacio que hoy no genera nada: lo transformamos en un motivo para que vuelvan.</p>
                     <a class="btn btn-gold" href="<?php echo e(comodato_whatsapp()); ?>" target="_blank" rel="noopener">Pedí tu máquina sin costo</a>
                 </div>
                 <aside class="deal-aside" aria-label="Resumen del trato">
                     <p class="eyebrow">En resumen</p>
                     <h3>Lo que te llevás vos</h3>
                     <ul class="deal-split">
+                        <li><span>Instalación 0$</span> la ponemos nosotros</li>
                         <li><span>30% para vos</span> con premio · peluches, clips…</li>
                         <li><span>50% para vos</span> sin premio · pool, tejo, arcade…</li>
-                        <li><span>Todo incluido</span> instalación, soporte y reportes</li>
                     </ul>
-                    <p>Contanos qué necesitás y te armamos el trato a tu medida.</p>
+                    <p>Contanos qué espacio tenés y te armamos el trato a tu medida.</p>
                 </aside>
-            </div>
-        </section>
-
-        <section id="categorias" class="section">
-            <div class="section-head">
-                <h2>Tipos de máquina</h2>
-                <p>Tocá una categoría para filtrar el catálogo.</p>
-            </div>
-            <div class="category-grid">
-                <?php foreach (CATEGORIES as $key => $cat): ?>
-                    <button class="cat-card<?php echo $filter === $key ? ' is-active' : ''; ?>" type="button" data-filter="<?php echo e($key); ?>">
-                        <img src="assets/img/defaults/<?php echo e($key); ?>.svg" alt="<?php echo e($cat['full']); ?> — Máquinas Bonus PLAYPARK" loading="lazy">
-                        <strong><?php echo e($cat['full']); ?></strong>
-                        <span><?php echo e($cat['hint']); ?></span>
-                    </button>
-                <?php endforeach; ?>
             </div>
             <div class="seo-machines">
                 <h3>Máquinas arcade y de entretenimiento</h3>
-                <p>En <strong>Máquinas Bonus PLAYPARK</strong> te ofrecemos <strong>grúas de peluches</strong>, claw machines, <strong>videojuegos arcade</strong>, pelea, carrera y simuladores, <strong>máquinas de golpes</strong>, <strong>máquinas de tickets</strong>, tejos, pooles, kiddies y clips. Elegís la tuya en el catálogo y nosotros nos ocupamos de ponerla a trabajar para vos.</p>
+                <p>En <strong>Máquinas Bonus PLAYPARK</strong> te ofrecemos <strong>grúas de peluches</strong>, claw machines, <strong>videojuegos arcade</strong>, pelea, carrera y simuladores, <strong>máquinas de golpes</strong>, <strong>máquinas de tickets</strong>, tejos, pooles, kiddies y clips. Elegís la tuya en el catálogo (arriba) y nosotros nos ocupamos de ponerla a trabajar para vos.</p>
             </div>
         </section>
 
