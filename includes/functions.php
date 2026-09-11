@@ -80,6 +80,116 @@ function find_machine(string $id): ?array
     return null;
 }
 
+function load_prep(): array
+{
+    if (!is_file(PREP_FILE)) {
+        return [];
+    }
+
+    $handle = fopen(PREP_FILE, 'rb');
+    if ($handle === false) {
+        return [];
+    }
+
+    flock($handle, LOCK_SH);
+    $raw = stream_get_contents($handle);
+    flock($handle, LOCK_UN);
+    fclose($handle);
+
+    $data = json_decode($raw ?: '[]', true);
+    return is_array($data) ? $data : [];
+}
+
+function save_prep(array $items): bool
+{
+    $dir = dirname(PREP_FILE);
+    if (!is_dir($dir)) {
+        mkdir($dir, 0775, true);
+    }
+
+    $json = json_encode(array_values($items), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    return file_put_contents(PREP_FILE, $json, LOCK_EX) !== false;
+}
+
+function prep_status_label(string $status): string
+{
+    return PREP_STATUSES[$status] ?? $status;
+}
+
+function sanitize_prep_input(array $input): array
+{
+    $machineName = clip(trim((string) ($input['machine_name'] ?? '')), 120);
+    $clientName = clip(trim((string) ($input['client_name'] ?? '')), 120);
+    $clientPhone = clip(trim((string) ($input['client_phone'] ?? '')), 40);
+    $location = clip(trim((string) ($input['location'] ?? '')), 200);
+    $mapUrl = clip(trim((string) ($input['map_url'] ?? '')), 500);
+    $status = trim((string) ($input['status'] ?? 'pendiente'));
+
+    if ($machineName === '') {
+        throw new InvalidArgumentException('Indicá qué máquina hay que preparar.');
+    }
+    if ($clientName === '') {
+        throw new InvalidArgumentException('Indicá el nombre del cliente.');
+    }
+    if ($location === '') {
+        throw new InvalidArgumentException('Indicá la ubicación del local.');
+    }
+    if (!isset(PREP_STATUSES[$status])) {
+        $status = 'pendiente';
+    }
+
+    // Solo dígitos y + para WhatsApp / teléfono.
+    $clientPhone = preg_replace('/[^\d+]/', '', $clientPhone) ?? '';
+
+    if ($mapUrl !== '') {
+        if (!preg_match('#^https?://#i', $mapUrl)) {
+            $mapUrl = 'https://' . $mapUrl;
+        }
+        if (!filter_var($mapUrl, FILTER_VALIDATE_URL)) {
+            throw new InvalidArgumentException('El link del mapa no es válido. Pegá un link de Google Maps.');
+        }
+        $scheme = strtolower((string) (parse_url($mapUrl, PHP_URL_SCHEME) ?? ''));
+        if ($scheme !== 'http' && $scheme !== 'https') {
+            throw new InvalidArgumentException('El link del mapa tiene que empezar con https://');
+        }
+    }
+
+    return [
+        'machine_name' => $machineName,
+        'client_name' => $clientName,
+        'client_phone' => $clientPhone,
+        'location' => $location,
+        'map_url' => $mapUrl,
+        'status' => $status,
+    ];
+}
+
+/** Orden: pendientes primero, entregadas al final; dentro del mismo estado, más nuevas arriba. */
+function sort_prep(array $items): array
+{
+    $order = array_flip(array_keys(PREP_STATUSES));
+    usort($items, static function (array $a, array $b) use ($order): int {
+        $sa = $order[$a['status'] ?? ''] ?? 99;
+        $sb = $order[$b['status'] ?? ''] ?? 99;
+        if ($sa !== $sb) {
+            return $sa <=> $sb;
+        }
+        return strcmp((string) ($b['created_at'] ?? ''), (string) ($a['created_at'] ?? ''));
+    });
+    return $items;
+}
+
+function prep_whatsapp_link(array $item): string
+{
+    $phone = preg_replace('/\D+/', '', (string) ($item['client_phone'] ?? '')) ?? '';
+    if ($phone === '') {
+        return '';
+    }
+    // Si vino sin código país, asumir AR móvil típico no — dejar el número tal cual.
+    $text = 'Hola ' . ($item['client_name'] ?? '') . ', te escribo por la máquina "' . ($item['machine_name'] ?? '') . '" para el local en ' . ($item['location'] ?? '') . '.';
+    return 'https://wa.me/' . $phone . '?text=' . rawurlencode($text);
+}
+
 function category_label(string $key): string
 {
     return CATEGORIES[$key]['label'] ?? $key;
@@ -316,6 +426,138 @@ function delete_upload(?string $photo): void
     }
 }
 
+/**
+ * Carga un recurso GD desde disco. Devuelve [resource, mime] o null.
+ * @return array{0: mixed, 1: string}|null
+ */
+function image_create_from_file(string $absPath): ?array
+{
+    if (!is_file($absPath)) {
+        return null;
+    }
+    $info = @getimagesize($absPath);
+    $mime = is_array($info) ? (string) ($info['mime'] ?? '') : '';
+    $img = null;
+    switch ($mime) {
+        case 'image/jpeg':
+            $img = @imagecreatefromjpeg($absPath);
+            break;
+        case 'image/png':
+            $img = @imagecreatefrompng($absPath);
+            break;
+        case 'image/webp':
+            $img = @imagecreatefromwebp($absPath);
+            break;
+        case 'image/gif':
+            $img = @imagecreatefromgif($absPath);
+            break;
+        default:
+            return null;
+    }
+    if ($img === false || $img === null) {
+        return null;
+    }
+
+    // Corregir orientación EXIF (celulares).
+    if ($mime === 'image/jpeg' && function_exists('exif_read_data')) {
+        $exif = @exif_read_data($absPath);
+        $orientation = (int) ($exif['Orientation'] ?? 1);
+        if ($orientation === 3) {
+            $img = imagerotate($img, 180, 0);
+        } elseif ($orientation === 6) {
+            $img = imagerotate($img, -90, 0);
+        } elseif ($orientation === 8) {
+            $img = imagerotate($img, 90, 0);
+        }
+    }
+
+    return [$img, $mime];
+}
+
+/**
+ * Redimensiona (lado largo ≤ IMAGE_MAX_SIDE) y guarda WebP.
+ * Devuelve ruta absoluta del .webp o null si falla.
+ */
+function optimize_image_to_webp(string $sourceAbs, ?string $destAbs = null): ?string
+{
+    if (!function_exists('imagewebp')) {
+        return null;
+    }
+
+    $loaded = image_create_from_file($sourceAbs);
+    if ($loaded === null) {
+        return null;
+    }
+    [$img, $mime] = $loaded;
+
+    $w = imagesx($img);
+    $h = imagesy($img);
+    if ($w < 1 || $h < 1) {
+        imagedestroy($img);
+        return null;
+    }
+
+    $max = (int) IMAGE_MAX_SIDE;
+    $scale = 1.0;
+    if ($w > $max || $h > $max) {
+        $scale = min($max / $w, $max / $h);
+    }
+    $nw = max(1, (int) round($w * $scale));
+    $nh = max(1, (int) round($h * $scale));
+
+    if ($nw !== $w || $nh !== $h) {
+        $dst = imagecreatetruecolor($nw, $nh);
+        if ($dst === false) {
+            imagedestroy($img);
+            return null;
+        }
+        imagealphablending($dst, false);
+        imagesavealpha($dst, true);
+        $transparent = imagecolorallocatealpha($dst, 0, 0, 0, 127);
+        imagefilledrectangle($dst, 0, 0, $nw, $nh, $transparent);
+        imagecopyresampled($dst, $img, 0, 0, 0, 0, $nw, $nh, $w, $h);
+        imagedestroy($img);
+        $img = $dst;
+    } else {
+        imagealphablending($img, true);
+        imagesavealpha($img, true);
+    }
+
+    if ($destAbs === null) {
+        $dir = dirname($sourceAbs);
+        $base = pathinfo($sourceAbs, PATHINFO_FILENAME);
+        $destAbs = $dir . DIRECTORY_SEPARATOR . $base . '.webp';
+    }
+
+    $ok = imagewebp($img, $destAbs, (int) IMAGE_WEBP_QUALITY);
+    imagedestroy($img);
+    if (!$ok || !is_file($destAbs)) {
+        return null;
+    }
+
+    return $destAbs;
+}
+
+/**
+ * Optimiza un archivo ya guardado en uploads/ y devuelve la URL relativa (uploads/…).
+ * Si ya es un WebP chico, puede reescribirse in-place.
+ */
+function optimize_stored_upload(string $absPath): ?string
+{
+    $webpAbs = optimize_image_to_webp($absPath);
+    if ($webpAbs === null) {
+        return is_file($absPath) ? UPLOAD_URL . basename($absPath) : null;
+    }
+
+    $srcReal = realpath($absPath) ?: $absPath;
+    $webpReal = realpath($webpAbs) ?: $webpAbs;
+    if (strcasecmp($srcReal, $webpReal) !== 0 && is_file($absPath)) {
+        @unlink($absPath);
+    }
+
+    return UPLOAD_URL . basename($webpAbs);
+}
+
 function whatsapp_link(?array $machine = null): string
 {
     $text = 'Hola, quiero consultar por el alquiler de máquinas de ' . SITE_NAME . '.';
@@ -404,11 +646,22 @@ function handle_upload(?array $file, ?string $previous = null): ?string
         mkdir(UPLOAD_DIR, 0775, true);
     }
 
-    $name = 'maq_' . bin2hex(random_bytes(8)) . '.' . ALLOWED_IMAGE_TYPES[$mime];
+    // Siempre guardamos WebP optimizado (peso bajo para móvil).
+    $name = 'maq_' . bin2hex(random_bytes(8)) . '.webp';
     $dest = UPLOAD_DIR . DIRECTORY_SEPARATOR . $name;
 
-    if (!move_uploaded_file($file['tmp_name'], $dest)) {
+    // Staging con extensión reconocible para GD / EXIF.
+    $ext = ALLOWED_IMAGE_TYPES[$mime];
+    $staging = UPLOAD_DIR . DIRECTORY_SEPARATOR . 'tmp_' . bin2hex(random_bytes(6)) . '.' . $ext;
+    if (!move_uploaded_file($file['tmp_name'], $staging)) {
         throw new RuntimeException('No se pudo guardar la foto.');
+    }
+
+    $optimized = optimize_image_to_webp($staging, $dest);
+    @unlink($staging);
+
+    if ($optimized === null || !is_file($dest)) {
+        throw new RuntimeException('No se pudo optimizar la foto. Probá con JPG o PNG.');
     }
 
     if ($previous) {

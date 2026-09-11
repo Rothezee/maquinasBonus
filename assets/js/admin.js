@@ -235,3 +235,141 @@
         empty.hidden = list.querySelectorAll('.admin-card').length > 0;
     }
 })();
+
+(function () {
+    const form = document.getElementById('prep-form');
+    const section = document.getElementById('prep-section');
+    if (!form || !section) return;
+
+    const actionInput = document.getElementById('prep-action');
+    const idInput = document.getElementById('prep-id');
+    const machineInput = document.getElementById('prep-machine');
+    const clientInput = document.getElementById('prep-client');
+    const phoneInput = document.getElementById('prep-phone');
+    const locationInput = document.getElementById('prep-location');
+    const mapUrlInput = document.getElementById('prep-map-url');
+    const statusInput = document.getElementById('prep-status');
+    const submitBtn = document.getElementById('prep-submit');
+    const cancelBtn = document.getElementById('prep-cancel');
+    const errorBox = document.getElementById('prep-error');
+    const hideDone = document.getElementById('prep-hide-done');
+    const csrf = form.querySelector('[name="csrf"]').value;
+
+    function showError(message) {
+        errorBox.hidden = !message;
+        errorBox.textContent = message || '';
+    }
+
+    function resetForm() {
+        form.reset();
+        actionInput.value = 'prep_create';
+        idInput.value = '';
+        statusInput.value = 'pendiente';
+        submitBtn.textContent = 'Agregar pedido';
+        cancelBtn.hidden = true;
+        showError('');
+    }
+
+    function fillEdit(el) {
+        const row = el.closest('[data-id]');
+        if (!row) return;
+        actionInput.value = 'prep_update';
+        idInput.value = row.dataset.id || '';
+        machineInput.value = row.dataset.machine || '';
+        clientInput.value = row.dataset.client || '';
+        phoneInput.value = row.dataset.phone || '';
+        locationInput.value = row.dataset.location || '';
+        if (mapUrlInput) mapUrlInput.value = row.dataset.map || '';
+        statusInput.value = row.dataset.status || 'pendiente';
+        submitBtn.textContent = 'Guardar cambios';
+        cancelBtn.hidden = false;
+        showError('');
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        machineInput.focus();
+    }
+
+    function send(fields) {
+        const data = new FormData();
+        data.append('csrf', csrf);
+        Object.keys(fields).forEach(function (key) {
+            data.append(key, fields[key]);
+        });
+        return fetch('api.php', { method: 'POST', body: data }).then(function (r) { return r.json(); });
+    }
+
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        showError('');
+        submitBtn.disabled = true;
+        const data = new FormData(form);
+        fetch('api.php', { method: 'POST', body: data })
+            .then(function (r) { return r.json(); })
+            .then(function (res) {
+                if (!res.ok) {
+                    showError(res.error || 'No se pudo guardar');
+                    return;
+                }
+                location.reload();
+            })
+            .catch(function () {
+                showError('Error de red. Probá de nuevo.');
+            })
+            .finally(function () {
+                submitBtn.disabled = false;
+            });
+    });
+
+    cancelBtn.addEventListener('click', resetForm);
+
+    if (hideDone) {
+        try {
+            hideDone.checked = localStorage.getItem('prepHideDone') === '1';
+        } catch (e) {}
+        section.classList.toggle('is-hiding-done', hideDone.checked);
+        hideDone.addEventListener('change', function () {
+            section.classList.toggle('is-hiding-done', hideDone.checked);
+            try {
+                localStorage.setItem('prepHideDone', hideDone.checked ? '1' : '0');
+            } catch (e2) {}
+        });
+    }
+
+    section.addEventListener('change', function (event) {
+        const select = event.target.closest('.prep-status-select');
+        if (!select) return;
+        const id = select.getAttribute('data-id');
+        const status = select.value;
+        select.disabled = true;
+        send({ action: 'prep_set_status', id: id, status: status })
+            .then(function (res) {
+                if (!res.ok) {
+                    alert(res.error || 'No se pudo actualizar el estado');
+                    location.reload();
+                    return;
+                }
+                location.reload();
+            })
+            .catch(function () {
+                alert('Error de red. Probá de nuevo.');
+                select.disabled = false;
+            });
+    });
+
+    section.addEventListener('click', function (event) {
+        const edit = event.target.closest('.js-prep-edit');
+        const del = event.target.closest('.js-prep-delete');
+
+        if (edit) {
+            fillEdit(edit);
+        }
+
+        if (del) {
+            const row = del.closest('[data-id]');
+            if (!row || !confirm('¿Quitamos este pedido de preparación?')) return;
+            send({ action: 'prep_delete', id: row.dataset.id }).then(function (res) {
+                if (!res.ok) return alert(res.error || 'No se pudo eliminar');
+                location.reload();
+            });
+        }
+    });
+})();

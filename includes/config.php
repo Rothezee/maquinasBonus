@@ -7,8 +7,16 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 
 define('ROOT_PATH', dirname(__DIR__));
 define('DATA_FILE', ROOT_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'machines.json');
+define('PREP_FILE', ROOT_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'prep.json');
 define('UPLOAD_DIR', ROOT_PATH . DIRECTORY_SEPARATOR . 'uploads');
 define('UPLOAD_URL', 'uploads/');
+
+const PREP_STATUSES = [
+    'pendiente' => 'Pendiente',
+    'en_proceso' => 'En proceso',
+    'lista' => 'Lista',
+    'entregada' => 'Entregada',
+];
 
 define('SITE_NAME', 'Máquinas Bonus');
 define('SITE_BRAND', 'PLAYPARK');
@@ -28,6 +36,9 @@ define('ADMIN_PASSWORD', 'bonus2026');
 
 define('MAX_UPLOAD_BYTES', 5 * 1024 * 1024);
 define('MAX_PHOTOS', 8);
+/** Lado largo máx. al guardar fotos del catálogo (móvil + viewer). */
+define('IMAGE_MAX_SIDE', 1600);
+define('IMAGE_WEBP_QUALITY', 80);
 define('MAX_VIDEOS', 5);
 
 const CATEGORIES = [

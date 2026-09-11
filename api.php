@@ -132,6 +132,106 @@ try {
         json_response(['ok' => true]);
     }
 
+    // --- Prep queue (máquinas a preparar) ---
+    if (strpos($action, 'prep_') === 0) {
+        $prep = load_prep();
+
+        if ($action === 'prep_create' || $action === 'prep_update') {
+            $fields = sanitize_prep_input($_POST);
+            $now = date('Y-m-d H:i:s');
+
+            if ($action === 'prep_create') {
+                $fields['id'] = bin2hex(random_bytes(8));
+                $fields['created_at'] = $now;
+                $fields['updated_at'] = $now;
+                $prep[] = $fields;
+                $saved = $fields;
+            } else {
+                $id = (string) ($_POST['id'] ?? '');
+                $index = null;
+                foreach ($prep as $i => $item) {
+                    if (($item['id'] ?? '') === $id) {
+                        $index = $i;
+                        break;
+                    }
+                }
+                if ($index === null) {
+                    throw new InvalidArgumentException('No encontramos ese pedido.');
+                }
+                $fields['id'] = $id;
+                $fields['created_at'] = $prep[$index]['created_at'] ?? $now;
+                $fields['updated_at'] = $now;
+                $prep[$index] = $fields;
+                $saved = $fields;
+            }
+
+            if (!save_prep($prep)) {
+                throw new RuntimeException('No se pudo guardar. Revisá permisos de la carpeta data.');
+            }
+
+            json_response([
+                'ok' => true,
+                'item' => $saved,
+                'whatsapp' => prep_whatsapp_link($saved),
+                'status_label' => prep_status_label($saved['status']),
+            ]);
+        }
+
+        if ($action === 'prep_set_status') {
+            $id = (string) ($_POST['id'] ?? '');
+            $status = trim((string) ($_POST['status'] ?? ''));
+            if (!isset(PREP_STATUSES[$status])) {
+                throw new InvalidArgumentException('Estado no válido.');
+            }
+            $found = false;
+            $saved = null;
+            foreach ($prep as &$item) {
+                if (($item['id'] ?? '') === $id) {
+                    $item['status'] = $status;
+                    $item['updated_at'] = date('Y-m-d H:i:s');
+                    $found = true;
+                    $saved = $item;
+                    break;
+                }
+            }
+            unset($item);
+            if (!$found) {
+                throw new InvalidArgumentException('No encontramos ese pedido.');
+            }
+            if (!save_prep($prep)) {
+                throw new RuntimeException('No se pudo actualizar el estado.');
+            }
+            json_response([
+                'ok' => true,
+                'item' => $saved,
+                'whatsapp' => prep_whatsapp_link($saved),
+                'status_label' => prep_status_label($saved['status']),
+            ]);
+        }
+
+        if ($action === 'prep_delete') {
+            $id = (string) ($_POST['id'] ?? '');
+            $kept = [];
+            $deleted = null;
+            foreach ($prep as $item) {
+                if (($item['id'] ?? '') === $id) {
+                    $deleted = $item;
+                    continue;
+                }
+                $kept[] = $item;
+            }
+            if ($deleted === null) {
+                throw new InvalidArgumentException('No encontramos ese pedido.');
+            }
+            if (!save_prep($kept)) {
+                throw new RuntimeException('No se pudo eliminar.');
+            }
+            json_response(['ok' => true]);
+        }
+
+        json_response(['ok' => false, 'error' => 'Accion de prep desconocida'], 400);
+    }
+
     json_response(['ok' => false, 'error' => 'Accion desconocida'], 400);
 } catch (InvalidArgumentException $e) {
     json_response(['ok' => false, 'error' => $e->getMessage()], 422);

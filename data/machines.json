@@ -8,13 +8,13 @@
         "videos": [],
         "id": "99453fa4a94b5eda",
         "photos": [
-            "uploads/maq_932cadc844589501.jpg",
-            "uploads/maq_6002397f867c9d8c.jpg",
-            "uploads/maq_d1ce0d7b5b139aba.jpg",
-            "uploads/maq_1528aca206b7b1d0.jpg",
-            "uploads/maq_e13db74173fdcc8c.jpg"
+            "uploads\/maq_932cadc844589501.webp",
+            "uploads\/maq_6002397f867c9d8c.webp",
+            "uploads\/maq_d1ce0d7b5b139aba.webp",
+            "uploads\/maq_1528aca206b7b1d0.webp",
+            "uploads\/maq_e13db74173fdcc8c.webp"
         ],
-        "photo": "uploads/maq_932cadc844589501.jpg",
+        "photo": "uploads\/maq_932cadc844589501.webp",
         "created_at": "2026-09-03 16:11:02"
     },
     {
@@ -26,11 +26,11 @@
         "videos": [],
         "id": "6cf3417a51ad7d1b",
         "photos": [
-            "uploads/maq_4b9035429dcceb13.jpg",
-            "uploads/maq_ecffe8d821a6be1f.jpg",
-            "uploads/maq_5a5c0a7764825e7b.jpg"
+            "uploads\/maq_4b9035429dcceb13.webp",
+            "uploads\/maq_ecffe8d821a6be1f.webp",
+            "uploads\/maq_5a5c0a7764825e7b.webp"
         ],
-        "photo": "uploads/maq_4b9035429dcceb13.jpg",
+        "photo": "uploads\/maq_4b9035429dcceb13.webp",
         "created_at": "2026-09-06 22:11:54"
     },
     {
@@ -42,28 +42,29 @@
         "videos": [],
         "id": "5d37428693dfcaf3",
         "photos": [
-            "uploads/maq_7e249be89838c532.jpg",
-            "uploads/maq_59bacd686ac89042.jpg"
+            "uploads\/maq_7e249be89838c532.webp",
+            "uploads\/maq_59bacd686ac89042.webp"
         ],
-        "photo": "uploads/maq_7e249be89838c532.jpg",
+        "photo": "uploads\/maq_7e249be89838c532.webp",
         "created_at": "2026-09-07 20:03:23"
     },
     {
         "name": "Camion MACK",
+        "categories": [
+            "kiddies"
+        ],
         "category": "kiddies",
         "description": "Venta o alquiler de camionsito para niños, perfecta para cumpleaños, eventos, locales. Comunicarse por WhatsApp para más información",
         "rented": false,
         "sold": false,
-        "videos": [
-            "https://drive.google.com/file/d/1pqo7dUlr2F-VqFKsc4jXC7KPkOkRcYN7/view?usp=drive_link"
-        ],
+        "videos": [],
         "id": "3580a8b967ee5ccd",
         "photos": [
-            "uploads/maq_89a385b69f2751f1.jpg",
-            "uploads/maq_0aecf1e23ce8cd7d.jpg",
-            "uploads/maq_b30a9daffee68bab.jpg"
+            "uploads\/maq_89a385b69f2751f1.webp",
+            "uploads\/maq_0aecf1e23ce8cd7d.webp",
+            "uploads\/maq_b30a9daffee68bab.webp"
         ],
-        "photo": "uploads/maq_89a385b69f2751f1.jpg",
+        "photo": "uploads\/maq_89a385b69f2751f1.webp",
         "created_at": "2026-09-07 20:05:11"
     },
     {
@@ -73,15 +74,15 @@
         "rented": false,
         "sold": false,
         "videos": [
-            "https://drive.google.com/file/d/1w9FMR9zVJyVfOc5zsbxIjq0Eaw8059CV/view?usp=drive_link"
+            "https:\/\/drive.google.com\/file\/d\/1w9FMR9zVJyVfOc5zsbxIjq0Eaw8059CV\/view?usp=drive_link"
         ],
         "id": "5e3308097c4f1ead",
         "photos": [
-            "uploads/maq_bd4c69e4307bb186.jpg",
-            "uploads/maq_7acfa5ff3c68744f.jpg",
-            "uploads/maq_5834181706aa1dc6.jpg"
+            "uploads\/maq_bd4c69e4307bb186.webp",
+            "uploads\/maq_7acfa5ff3c68744f.webp",
+            "uploads\/maq_5834181706aa1dc6.webp"
         ],
-        "photo": "uploads/maq_bd4c69e4307bb186.jpg",
+        "photo": "uploads\/maq_bd4c69e4307bb186.webp",
         "created_at": "2026-09-07 20:10:29"
     },
     {
@@ -95,15 +96,15 @@
         "rented": false,
         "sold": false,
         "videos": [
-            "https://drive.google.com/file/d/1jpyM4KXBQ38EgZpBhPcQmGzKvTSsORZF/view?usp=drive_link"
+            "https:\/\/drive.google.com\/file\/d\/1jpyM4KXBQ38EgZpBhPcQmGzKvTSsORZF\/view?usp=drive_link"
         ],
         "id": "2f2ebfb0afefe85e",
         "photos": [
-            "uploads/maq_8eccdd02d68d1149.jpg",
-            "uploads/maq_221d9af6770bf720.jpg",
-            "uploads/maq_e4fa58d28294a2b3.jpg"
+            "uploads\/maq_8eccdd02d68d1149.webp",
+            "uploads\/maq_221d9af6770bf720.webp",
+            "uploads\/maq_e4fa58d28294a2b3.webp"
         ],
-        "photo": "uploads/maq_8eccdd02d68d1149.jpg",
+        "photo": "uploads\/maq_8eccdd02d68d1149.webp",
         "created_at": "2026-09-07 20:14:07"
     },
     {
@@ -115,16 +116,205 @@
         "description": "Venta o alquiler de Trensito para niños, perfecta para cumpleaños, eventos, locales. Comunicarse por WhatsApp para más información.",
         "rented": false,
         "sold": false,
-        "videos": [
-            "https://drive.google.com/file/d/1ukYonx376VB04B-ouHNCgqb9JHIcLP1R/view?usp=drive_link"
-        ],
+        "videos": [],
         "id": "9be8e7d3b6588eb5",
         "photos": [
-            "uploads/maq_ad1576ece8296920.jpg",
-            "uploads/maq_6eddf8c22e9cb465.jpg",
-            "uploads/maq_354350e5a2d5f99e.jpg"
+            "uploads\/maq_ad1576ece8296920.webp",
+            "uploads\/maq_6eddf8c22e9cb465.webp",
+            "uploads\/maq_354350e5a2d5f99e.webp"
         ],
-        "photo": "uploads/maq_ad1576ece8296920.jpg",
+        "photo": "uploads\/maq_ad1576ece8296920.webp",
         "created_at": "2026-09-07 20:38:44"
+    },
+    {
+        "name": "Auto hombre araña",
+        "categories": [
+            "kiddies"
+        ],
+        "category": "kiddies",
+        "description": "a",
+        "rented": false,
+        "sold": false,
+        "videos": [],
+        "id": "77fe6ec591303149",
+        "photos": [
+            "uploads\/maq_1c47b31391f6f215.webp"
+        ],
+        "photo": "uploads\/maq_1c47b31391f6f215.webp",
+        "created_at": "2026-09-08 21:33:49"
+    },
+    {
+        "name": "Caballo blanco",
+        "categories": [
+            "kiddies"
+        ],
+        "category": "kiddies",
+        "description": "asdf",
+        "rented": false,
+        "sold": false,
+        "videos": [],
+        "id": "ebbc3b7bd981d866",
+        "photos": [
+            "uploads\/maq_3416ba08c9561352.webp"
+        ],
+        "photo": "uploads\/maq_3416ba08c9561352.webp",
+        "created_at": "2026-09-08 21:34:34"
+    },
+    {
+        "name": "Elefante",
+        "categories": [
+            "kiddies"
+        ],
+        "category": "kiddies",
+        "description": "asdf",
+        "rented": false,
+        "sold": false,
+        "videos": [],
+        "id": "9ae7dad85cee97cb",
+        "photos": [
+            "uploads\/maq_668edae00cf43d18.webp"
+        ],
+        "photo": "uploads\/maq_668edae00cf43d18.webp",
+        "created_at": "2026-09-08 21:36:35"
+    },
+    {
+        "name": "Excabadora",
+        "categories": [
+            "kiddies"
+        ],
+        "category": "kiddies",
+        "description": "asdf",
+        "rented": false,
+        "sold": false,
+        "videos": [],
+        "id": "0e105fe0ca2b8a7a",
+        "photos": [
+            "uploads\/maq_6e1139318d660e62.webp"
+        ],
+        "photo": "uploads\/maq_6e1139318d660e62.webp",
+        "created_at": "2026-09-08 21:37:02"
+    },
+    {
+        "name": "Manny a la construccion",
+        "categories": [
+            "kiddies"
+        ],
+        "category": "kiddies",
+        "description": "asdf",
+        "rented": false,
+        "sold": false,
+        "videos": [],
+        "id": "cc32bf7e3dfa6ad0",
+        "photos": [
+            "uploads\/maq_d276b4bb563c9d87.webp"
+        ],
+        "photo": "uploads\/maq_d276b4bb563c9d87.webp",
+        "created_at": "2026-09-08 21:37:53"
+    },
+    {
+        "name": "Mounster Big Foot Hombre Araña",
+        "categories": [
+            "kiddies"
+        ],
+        "category": "kiddies",
+        "description": "asdf",
+        "rented": false,
+        "sold": false,
+        "videos": [],
+        "id": "3996afc136e5129c",
+        "photos": [
+            "uploads\/maq_2af93f78faa1255e.webp"
+        ],
+        "photo": "uploads\/maq_2af93f78faa1255e.webp",
+        "created_at": "2026-09-08 21:38:30"
+    },
+    {
+        "name": "Mounster Big Foot",
+        "categories": [
+            "kiddies"
+        ],
+        "category": "kiddies",
+        "description": "asdf",
+        "rented": false,
+        "sold": false,
+        "videos": [],
+        "id": "9e61c0478c029c64",
+        "photos": [
+            "uploads\/maq_557b990bd07475e7.webp"
+        ],
+        "photo": "uploads\/maq_557b990bd07475e7.webp",
+        "created_at": "2026-09-08 21:39:13"
+    },
+    {
+        "name": "Moto Harley Davidson",
+        "categories": [
+            "kiddies"
+        ],
+        "category": "kiddies",
+        "description": "asdf",
+        "rented": false,
+        "sold": false,
+        "videos": [],
+        "id": "7fadae9a551f6765",
+        "photos": [
+            "uploads\/maq_8fef32199b20efe0.webp"
+        ],
+        "photo": "uploads\/maq_8fef32199b20efe0.webp",
+        "created_at": "2026-09-08 21:39:58"
+    },
+    {
+        "name": "Tren",
+        "categories": [
+            "kiddies"
+        ],
+        "category": "kiddies",
+        "description": "asdf",
+        "rented": false,
+        "sold": false,
+        "videos": [],
+        "id": "9e3a685d37c72ef5",
+        "photos": [
+            "uploads\/maq_ee7eb8c31c650ead.webp"
+        ],
+        "photo": "uploads\/maq_ee7eb8c31c650ead.webp",
+        "created_at": "2026-09-08 21:41:31"
+    },
+    {
+        "name": "Midway Card Fury",
+        "categories": [
+            "carreras",
+            "videojuegos"
+        ],
+        "category": "carreras",
+        "description": "Excelente maquina de carreras cuenta con volante que ejerce diferentes recistencias segun como se ejecuten las curvas.",
+        "rented": false,
+        "sold": false,
+        "videos": [],
+        "id": "324cbc0f8c3a87cc",
+        "photos": [
+            "uploads\/maq_827c322226e4392f.webp",
+            "uploads\/maq_c65dcff486b8e5c3.webp"
+        ],
+        "photo": "uploads\/maq_827c322226e4392f.webp",
+        "created_at": "2026-09-08 21:47:25"
+    },
+    {
+        "name": "SEGA RALLY",
+        "categories": [
+            "carreras",
+            "videojuegos"
+        ],
+        "category": "carreras",
+        "description": "Espectacular maquina doble.",
+        "rented": false,
+        "sold": false,
+        "videos": [],
+        "id": "602fe51fffda50bc",
+        "photos": [
+            "uploads\/maq_4db6b460716dcb7b.webp",
+            "uploads\/maq_1ba4376e0f8a87e5.webp"
+        ],
+        "photo": "uploads\/maq_4db6b460716dcb7b.webp",
+        "created_at": "2026-09-08 21:50:00"
     }
 ]
