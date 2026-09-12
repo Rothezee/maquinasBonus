@@ -220,11 +220,11 @@ foreach ($faqItems as $item) {
             <p class="lede">Convertí un rincón sin uso en un motivo para que tus clientes vuelvan. <strong>Instalamos la máquina sin cargo</strong> y vos te quedás con un porcentaje de las ganancias — directo a tu bolsillo.</p>
             <div class="hero-stats hero-proof" aria-label="Prueba social">
                 <div>
-                    <em>+8</em>
+                    <em>+18</em>
                     años operando
                 </div>
                 <div>
-                    <em>+10</em>
+                    <em>+15</em>
                     locales ya generan un extra con nosotros
                 </div>
             </div>
@@ -378,7 +378,7 @@ foreach ($faqItems as $item) {
             </div>
             <div class="deal-layout">
                 <div class="deal-copy">
-                    <p class="deal-hook">Ese pasillo vacío o la esquina que nadie mira puede generar visitas y plata. <strong id="install-free">La máquina la instalamos sin cargo</strong> y vos te llevás tu porcentaje.</p>
+                    <p class="deal-hook">Ese pasillo vacío o la esquina que nadie mira puede generar visitas e ingresos adicionales. <strong id="install-free">La máquina la instalamos sin cargo</strong> y vos te llevás tu porcentaje.</p>
                     <p class="lede">La dejamos funcionando, te explicamos cómo opera y, si falla, la reparamos sin cargo. Cobramos semanal y te mostramos los números reales, sin filtro.</p>
 
                     <div class="deal-modes">
